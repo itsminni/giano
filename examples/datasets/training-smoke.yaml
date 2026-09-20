@@ -1,0 +1,18 @@
+# Tests the new-data training/resume plumbing.
+imputeformer:
+  model:
+    input_embedding_dim: 8
+    spatial_embedding_dim: 8
+    num_heads: 2
+    num_layers: 1
+    projection_tokens: 4
+    feed_forward_dim: 16
+  training:
+    seq_len: 72
+    max_nodes: 3
+    batch_size: 2
+    max_epochs: 1
+    max_batches_per_epoch: 2
+    max_validation_batches: 2
+    patience: 1
+    seed: 42

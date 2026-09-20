@@ -1,0 +1,51 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+**/__pycache__/
+
+# Ignore local data payloads.
+data/**
+!data/**/
+!data/**/.gitkeep
+data/**/.DS_Store
+
+# Virtual environment
+.venv/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+
+# Ruff cache
+.ruff_cache/
+
+# Ignore .pytest_cache
+.pytest_cache/
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+/notebooks/kernel-ipc-*
+
+# Ignore VS Code
+.vscode/
+
+# Ignore generated inference, evaluation, and training outputs
+artifacts/
+logs/
+
+# Model checkpoints
+checkpoints/
+
+# Website dependencies, builds and generated assets
+website/**/node_modules/
+website/**/.output/
+website/**/.nitro/
+website/**/.tanstack/
+website/**/.vercel/
+website/**/.wrangler/
+website/**/public/data/
+website/**/src/generated/

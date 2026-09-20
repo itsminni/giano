@@ -1,0 +1,16 @@
+# Paths are relative to THIS file, not the working directory.
+adapter: csv
+dataset_id: example-stations
+observations: observations.csv
+stations: stations.csv
+timezone: UTC
+cadence_minutes: 60
+variables:
+  temperature:
+    column: air_temperature
+    unit: degC
+    missing_values: [-9999]
+  humidity:
+    column: relative_humidity
+    unit: '%'
+    missing_values: [-9999]

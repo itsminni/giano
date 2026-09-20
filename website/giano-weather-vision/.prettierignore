@@ -1,0 +1,10 @@
+node_modules/
+.vercel/
+.output/
+.nitro/
+.tanstack/
+public/data/
+src/generated/
+src/routeTree.gen.ts
+bun.lock
+src/components/giano/Demo.tsx

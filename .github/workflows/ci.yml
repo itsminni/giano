@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  quality:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.5"
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install 3.11
+
+      - name: Sync locked environment
+        run: uv sync --locked --python 3.11
+
+      - name: Ruff lint
+        run: uv run --locked ruff check .
+
+      - name: Ruff format
+        run: uv run --locked ruff format --check .
+
+      - name: Syntax check
+        run: uv run --locked python -m compileall -q src tests
+
+      - name: Unit tests
+        run: uv run --locked pytest -q
+
+      - name: Type check
+        run: uv run --locked mypy src/giano tests notebooks/release_artifacts.py tools
+
+      - name: Build wheel
+        run: uv build --wheel
+
+      - name: CLI smoke checks
+        run: |
+          uv run --locked giano --help
+          uv run --locked giano-dataset --help
+          uv run --locked giano-train-bilstm --help
+          uv run --locked giano-benchmark-bilstm --help
+          uv run --locked giano-train-imputeformer --help
+          uv run --locked giano-benchmark-imputeformer --help
+          uv run --locked giano-analyze-gapfill --help
+          uv run --locked giano-analyze-detailed --help
+          uv run --locked giano-evaluate-downstream --help
+          uv run --locked giano-export-onnx --help
+          uv run --locked giano-export-reconstruction-example --help
+          uv run --locked giano-impute --help
+          uv run --locked python -m giano.training_campaign --help
+          uv run --locked python -m giano.evaluation.campaign --help
+          uv run --locked python tools/prepare_release.py --help
+
+      - name: Dependency audit
+        run: uv --preview-features audit-command audit --locked

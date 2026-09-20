@@ -1,0 +1,20 @@
+# Release artifacts. Training settings are in config.yaml.
+schema_version: 1
+name: giano-1.0.0
+training: artifacts/training/corrected_v2_spectral
+checkpoint_report: artifacts/training/corrected_v2_spectral/verification_20260911.json
+evaluation: artifacts/evaluation/corrected_v2_release
+downstream: artifacts/evaluation/corrected_v2_downstream_v2
+external_evaluation: artifacts/evaluation/external_noaa_2024
+onnx: artifacts/models/corrected_v2_website
+demo: artifacts/demo/corrected_v2_release
+stations: artifacts/website/giano-stations
+research: artifacts/website/corrected_v2_release
+history: artifacts/website/giano-history
+data: data/2-processed-v2
+seeds: [42, 43, 44, 45, 46]
+presentation:
+  family: giano
+  seed: 42
+  fallback: none
+  operational_policy: deferred

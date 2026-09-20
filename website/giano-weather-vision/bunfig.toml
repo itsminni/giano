@@ -1,0 +1,4 @@
+[install]
+saveTextLockfile = true
+# Minimum package age: 24 hours.
+minimumReleaseAge = 86400

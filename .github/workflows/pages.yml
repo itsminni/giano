@@ -1,0 +1,62 @@
+name: Publish website to GitHub Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release containing giano-pages.tar.gz
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download website bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: gh release download "$RELEASE_TAG" --pattern giano-pages.tar.gz
+
+      - name: Extract static site
+        run: |
+          python - <<'PY'
+          import tarfile
+          from pathlib import Path
+          with tarfile.open("giano-pages.tar.gz") as archive:
+              archive.extractall("_site", filter="data")
+          assert Path("_site/index.html").is_file(), "Missing index.html"
+          files = list(Path("_site").rglob("*"))
+          assert not any(p.is_symlink() for p in files), "Unexpected symbolic link"
+          assert sum(p.stat().st_size for p in files if p.is_file()) < 1_000_000_000
+          PY
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: prepare
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

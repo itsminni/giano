@@ -1,0 +1,125 @@
+# Giano preprocessing and coordinate-inductive ImputeFormer configuration
+# Train with: uv run giano-train-imputeformer --config config.yaml
+
+paths:
+  raw_csv: data/1-raw/dump
+  raw_era5: data/1-raw/era5
+  processed: data/2-processed-v2
+
+split:
+  # Storage distribution only. ImputeFormer pools these files and creates
+  # leakage-safe temporal 70/15/15 windows internally.
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+
+# Frozen same-mask protocol. Benchmark `--seeds` varies masks for one canonical
+# checkpoint; `--training-seeds` loads independently trained checkpoints and
+# pairs each one with the same mask seed.
+benchmark:
+  split: test
+  seeds: [42]
+  max_batches: 200
+  cases:
+    - {mask_type: point, parameter: 0.1}
+    - {mask_type: point, parameter: 0.3}
+    - {mask_type: point, parameter: 0.5}
+    - {mask_type: block, parameter: 3}
+    - {mask_type: block, parameter: 6}
+    - {mask_type: block, parameter: 12}
+    - {mask_type: block, parameter: 24}
+    - {mask_type: spatial_block, parameter: 6}
+    - {mask_type: spatial_block, parameter: 12}
+    - {mask_type: terminal, parameter: 6}
+    - {mask_type: terminal, parameter: 12}
+    - {mask_type: terminal, parameter: 24}
+    # Sample block lengths from the natural train-only distribution, capped at
+    # its 95th percentile and at the 72-hour model window.
+    - {mask_type: empirical, parameter: 0.95}
+
+# Coordinate-inductive ImputeFormer. It pools stations by variable, then uses
+# time-disjoint train/validation/test windows. Missing ERA5 channels are
+# represented explicitly.
+imputeformer:
+  model:
+    input_dim: 12
+    input_embedding_dim: 32
+    spatial_embedding_dim: 32
+    num_heads: 4
+    num_layers: 2
+    projection_tokens: 8
+    feed_forward_dim: 128
+    coordinate_frequencies: 6
+    dropout: 0.1
+    max_residual: 3.0
+    min_learned_gap: 5
+  training:
+    seq_len: 72
+    stride: 12
+    max_nodes: 24
+    min_context_points: 4
+    batch_size: 8
+    num_workers: 0
+    max_epochs: 12
+    # null means one complete pass over every eligible training window.
+    max_batches_per_epoch: null
+    max_validation_batches: 100
+    learning_rate: 1.0e-3
+    weight_decay: 1.0e-4
+    patience: 4
+    gradient_clip: 1.0
+    # Historical key: now weights the mask-aware temporal spectral prior.
+    low_rank_weight: 1.0e-3
+    residual_weight: 1.0e-3
+    seed: 42
+    point_rate_min: 0.15
+    point_rate_max: 0.45
+    block_lengths: [3, 6, 12, 24]
+    train_mask_mode: mixed
+    validation_mask_mode: mixed
+
+# BiLSTM baselines. Both variants use the current temporal splits and common
+# 72-hour benchmark windows. Their intentionally different recipes are stored
+# in each checkpoint for auditability.
+bilstm:
+  model:
+    hidden_size: 64
+    num_layers: 1
+    dropout: 0.0
+    missing_sentinel: -100.0
+  training:
+    seq_len: 72
+    stride: 12
+    max_nodes: 24
+    min_context_points: 4
+    batch_size: 8
+    num_workers: 0
+    max_epochs: 12
+    # null means one complete pass over every eligible training window.
+    max_batches_per_epoch: null
+    max_validation_batches: 100
+    learning_rate: 1.0e-3
+    legacy_learning_rate: 2.0e-3
+    weight_decay: 1.0e-4
+    patience: 4
+    gradient_clip: 1.0
+    seed: 42
+    point_rate_min: 0.15
+    point_rate_max: 0.45
+    legacy_point_rate: 0.5
+    block_lengths: [3, 6, 12, 24]
+
+# Frozen downstream utility test. The Ridge model is fitted once on clean
+# training histories, then reused unchanged for every repaired test history.
+downstream:
+  ridge:
+    history_length: 72
+    horizons: [1, 6, 12, 24]
+    alpha: 1.0
+    include_calendar: true
+  rolling_origin:
+    stride: 24
+    max_origins: 200
+    bootstrap_samples: 1000
+    seed: 42
