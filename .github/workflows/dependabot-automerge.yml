@@ -55,13 +55,6 @@ jobs:
                 repository(owner: $owner, name: $repo) {
                   autoMergeAllowed
                   squashMergeAllowed
-                  ref(qualifiedName: "refs/heads/main") {
-                    branchProtectionRule {
-                      requiresStatusChecks
-                      requiresStrictStatusChecks
-                      requiredStatusCheckContexts
-                    }
-                  }
                   pullRequest(number: $number) {
                     id state isDraft headRefOid baseRefName
                     author { login }
@@ -71,12 +64,21 @@ jobs:
               }
             `, { owner, repo, number: eventPr.number });
 
-            const protection = repository.ref?.branchProtectionRule;
+            // Effective rules are readable with Metadata: read. The classic
+            // branchProtectionRule GraphQL field requires administration access,
+            // which the workflow's GITHUB_TOKEN intentionally does not have.
+            const rules = await github.paginate('GET /repos/{owner}/{repo}/rules/branches/{branch}', {
+              owner, repo, branch: 'main', per_page: 100,
+            });
             const required = ['quality (ubuntu-latest)', 'quality (windows-latest)', 'website'];
+            const protectedChecks = rules.some(rule =>
+              rule.type === 'required_status_checks' &&
+              rule.parameters?.strict_required_status_checks_policy === true &&
+              required.every(name => rule.parameters.required_status_checks?.some(check =>
+                check.context === name && check.integration_id === 15368)));
             if (!repository.autoMergeAllowed || !repository.squashMergeAllowed ||
-                !protection?.requiresStatusChecks || !protection.requiresStrictStatusChecks ||
-                !required.every(name => protection.requiredStatusCheckContexts.includes(name))) {
-              core.setFailed('Enable auto-merge, squash merge and strict branch protection on main, requiring quality (ubuntu-latest), quality (windows-latest) and website.');
+                !protectedChecks) {
+              core.setFailed('Enable auto-merge, squash merge and an active strict required-check ruleset on main for quality (ubuntu-latest), quality (windows-latest) and website from GitHub Actions.');
               return;
             }
 
