@@ -1,12 +1,9 @@
 name: Publish website to GitHub Pages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      release_tag:
-        description: Release containing giano-pages.tar.gz
-        required: true
-        type: string
 
 permissions:
   contents: read
@@ -16,28 +13,52 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  prepare:
+  build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website/giano-weather-vision
     steps:
-      - name: Download website bundle
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Download and verify released website data
+        working-directory: .
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ inputs.release_tag }}
-        run: gh release download "$RELEASE_TAG" --pattern giano-pages.tar.gz
-
-      - name: Extract static site
         run: |
-          python - <<'PY'
-          import tarfile
-          from pathlib import Path
-          with tarfile.open("giano-pages.tar.gz") as archive:
-              archive.extractall("_site", filter="data")
-          assert Path("_site/index.html").is_file(), "Missing index.html"
-          files = list(Path("_site").rglob("*"))
-          assert not any(p.is_symlink() for p in files), "Unexpected symbolic link"
-          assert sum(p.stat().st_size for p in files if p.is_file()) < 1_000_000_000
+          gh release download v1.0.0 --pattern giano-1.0.0-artifacts.zip --dir "$RUNNER_TEMP"
+          echo "9be018746c4c312859ca4e11e654834e2b18ed7e87133c69284bb64865d58408  $RUNNER_TEMP/giano-1.0.0-artifacts.zip" | sha256sum --check
+          python - "$RUNNER_TEMP/giano-1.0.0-artifacts.zip" <<'PY'
+          import sys
+          import zipfile
+          from pathlib import PurePosixPath
+
+          prefix = "artifacts/website/giano-history/"
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              members = [name for name in archive.namelist() if name.startswith(prefix)]
+              assert prefix + "manifest.json" in members, "Missing website data"
+              assert all(".." not in PurePosixPath(name).parts for name in members)
+              archive.extractall(".", members=members)
           PY
+          rm "$RUNNER_TEMP/giano-1.0.0-artifacts.zip"
+
+      - name: Prepare website data
+        run: bun run prepare:data
+
+      - name: Build GitHub Pages website
+        run: bun run build:pages
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
@@ -45,10 +66,10 @@ jobs:
       - name: Upload static site
         uses: actions/upload-pages-artifact@v5
         with:
-          path: _site
+          path: website/giano-weather-vision/dist/client
 
   deploy:
-    needs: prepare
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       pages: write

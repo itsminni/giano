@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useHydrated } from "@tanstack/react-router";
 import { Copy, ExternalLink } from "lucide-react";
 import { useI18n } from "./i18n";
 import { DATASET_URL, GITHUB_URL } from "./data";
@@ -20,24 +21,27 @@ uv run --locked giano-dataset validate \\
 function Command({ value }: { value: string }) {
   const { t } = useI18n();
   const [status, setStatus] = useState("guide.copy");
+  const hydrated = useHydrated();
   return (
     <div className="my-5 overflow-hidden rounded-2xl border border-border bg-background/70">
-      <div className="flex justify-end border-b border-border px-4 py-2">
-        <button
-          className="flex items-center gap-2 text-xs text-accent"
-          onClick={async () => {
-            try {
-              await navigator.clipboard.writeText(value);
-              setStatus("guide.copied");
-            } catch {
-              setStatus("guide.copyFailed");
-            }
-          }}
-        >
-          <Copy className="h-3.5 w-3.5" />
-          <span aria-live="polite">{t(status)}</span>
-        </button>
-      </div>
+      {hydrated && (
+        <div className="flex justify-end border-b border-border px-4 py-2">
+          <button
+            className="flex items-center gap-2 text-xs text-accent"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(value);
+                setStatus("guide.copied");
+              } catch {
+                setStatus("guide.copyFailed");
+              }
+            }}
+          >
+            <Copy className="h-3.5 w-3.5" />
+            <span aria-live="polite">{t(status)}</span>
+          </button>
+        </div>
+      )}
       <pre className="overflow-x-auto p-5 text-sm leading-7">
         <code>{value}</code>
       </pre>

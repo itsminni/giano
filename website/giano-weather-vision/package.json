@@ -9,7 +9,7 @@
     "test": "bun test",
     "dev": "vite dev",
     "build": "vite build",
-    "build:pages": "vite build --mode pages && node scripts/prepare-pages.mjs",
+    "build:pages": "vite build --mode pages && node scripts/prepare-pages.mjs && node scripts/check-readable-html.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

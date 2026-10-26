@@ -1,4 +1,10 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  stripSearchParams,
+  useHydrated,
+  useLocation,
+} from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Nav, TABS, type TabId } from "@/components/giano/Nav";
 import { Home } from "@/components/giano/Home";
 import { MapSection } from "@/components/giano/MapSection";
@@ -8,6 +14,7 @@ import { Demo } from "@/components/giano/Demo";
 import { Guide } from "@/components/giano/Guide";
 import { Footer } from "@/components/giano/Footer";
 import { LanguageProvider, useI18n } from "@/components/giano/i18n";
+import { ReadableSite } from "@/components/giano/ReadableSite";
 
 const title = "Giano — Ricostruzione dei dati meteo del Trentino";
 const description =
@@ -60,6 +67,21 @@ function Site() {
   const { tab, station, variable, mode } = Route.useSearch();
   const navigate = Route.useNavigate();
   const { t } = useI18n();
+  const hydrated = useHydrated();
+  const anchor = useLocation({ select: (location) => location.hash });
+
+  useEffect(() => {
+    if (
+      !new URLSearchParams(window.location.search).has("tab") &&
+      (anchor === "impatto" || anchor === "storia" || anchor === "guida")
+    ) {
+      void navigate({
+        search: (previous) => ({ ...previous, tab: anchor }),
+        hash: "",
+        replace: true,
+      });
+    }
+  }, [anchor, navigate]);
 
   const go = (t: TabId) => {
     void navigate({
@@ -68,6 +90,10 @@ function Site() {
     if (typeof window !== "undefined")
       window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  // Serve the same public text to readers and crawlers before JavaScript runs.
+  // Interactive views take over only after hydration, preserving shared URLs.
+  if (!hydrated) return <ReadableSite />;
 
   return (
     <div className="min-h-screen">

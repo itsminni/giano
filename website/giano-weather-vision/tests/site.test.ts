@@ -11,6 +11,7 @@ import { Story } from "../src/components/giano/Story";
 import { Impact } from "../src/components/giano/Impact";
 import { Guide } from "../src/components/giano/Guide";
 import { ZoomView } from "../src/components/giano/ZoomView";
+import { ReadableSite } from "../src/components/giano/ReadableSite";
 import {
   ReconstructionExample,
   HistoricalSeries,
@@ -79,6 +80,22 @@ function render(component: ReactNode, client = new QueryClient()) {
     else Reflect.deleteProperty(globalThis, "navigator");
   }
 }
+
+test("the readable page exposes public text and working anchors without JavaScript controls", () => {
+  const html = render(createElement(ReadableSite));
+  for (const section of ["home", "impatto", "storia", "guida"]) {
+    expect(html).toContain(`id="${section}"`);
+    expect(html).toContain(`href="#${section}"`);
+  }
+  expect(html).toContain(it["copy.description"]);
+  expect(html).toContain(it["impact.downstreamTitle"]);
+  expect(html).toContain("Gabriele Mininni");
+  expect(html).toContain("giano-impute");
+  expect(html).toContain("<table");
+  expect(html).not.toMatch(/<(?:button|input|select|canvas)\b/);
+  expect(html).not.toContain("recharts-responsive-container");
+  expect(html).not.toContain('href="?tab=mappa"');
+});
 
 describe("Station navigation and credits", () => {
   test("ERA5 is optional, off initially and never substituted for observations", () => {
