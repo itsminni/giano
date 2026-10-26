@@ -76,7 +76,7 @@ jobs:
             if (!repository.autoMergeAllowed || !repository.squashMergeAllowed ||
                 !protection?.requiresStatusChecks || !protection.requiresStrictStatusChecks ||
                 !required.every(name => protection.requiredStatusCheckContexts.includes(name))) {
-              core.setFailed('Enable auto-merge, squash merge and strict branch protection for all three CI checks on main. See .github/DEPENDENCIES.md.');
+              core.setFailed('Enable auto-merge, squash merge and strict branch protection on main, requiring quality (ubuntu-latest), quality (windows-latest) and website.');
               return;
             }
 
