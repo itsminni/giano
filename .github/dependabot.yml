@@ -1,0 +1,48 @@
+version: 2
+
+multi-ecosystem-groups:
+  dependencies:
+    open-pull-requests-limit: 1
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Rome
+
+updates:
+  - package-ecosystem: uv
+    directory: /
+    multi-ecosystem-group: dependencies
+    patterns: ["*"]
+    # This filter applies only to version updates; security fixes may be major.
+    allow:
+      - dependency-type: all
+        update-types: [version-update:semver-minor, version-update:semver-patch]
+    groups:
+      python-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: bun
+    directory: /website/giano-weather-vision
+    multi-ecosystem-group: dependencies
+    patterns: ["*"]
+    allow:
+      - dependency-name: "*"
+        update-types: [version-update:semver-minor, version-update:semver-patch]
+    groups:
+      website-security:
+        applies-to: security-updates
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    multi-ecosystem-group: dependencies
+    patterns: ["*"]
+    allow:
+      - dependency-name: "*"
+        update-types: [version-update:semver-minor, version-update:semver-patch]
+    groups:
+      actions-security:
+        applies-to: security-updates
+        patterns: ["*"]

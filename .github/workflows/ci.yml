@@ -7,6 +7,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   quality:
     strategy:
@@ -72,3 +75,74 @@ jobs:
 
       - name: Dependency audit
         run: uv --preview-features audit-command audit --locked
+
+  website:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: website/giano-weather-vision
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Audit dependencies
+        run: bun audit
+
+      - name: Cache released website data
+        id: data
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: artifacts/website/giano-history
+          key: giano-history-v1-9be018746c4c312859ca4e11e654834e2b18ed7e87133c69284bb64865d58408
+
+      - name: Download and verify released website data
+        if: steps.data.outputs.cache-hit != 'true'
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release download v1.0.0 --pattern giano-1.0.0-artifacts.zip --dir "$RUNNER_TEMP"
+          echo "9be018746c4c312859ca4e11e654834e2b18ed7e87133c69284bb64865d58408  $RUNNER_TEMP/giano-1.0.0-artifacts.zip" | sha256sum --check
+          python - "$RUNNER_TEMP/giano-1.0.0-artifacts.zip" <<'PY'
+          import sys
+          import zipfile
+          from pathlib import PurePosixPath
+
+          prefix = "artifacts/website/giano-history/"
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              members = [name for name in archive.namelist() if name.startswith(prefix)]
+              assert prefix + "manifest.json" in members, "Missing website data"
+              assert all(".." not in PurePosixPath(name).parts for name in members)
+              archive.extractall(".", members=members)
+          PY
+          rm "$RUNNER_TEMP/giano-1.0.0-artifacts.zip"
+
+      - name: Prepare and verify website data
+        run: bun run prepare:data
+
+      - name: Type check
+        run: bun run check
+
+      - name: Unit tests
+        run: bun test
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build website
+        run: bun run build
+
+      - name: Build GitHub Pages website
+        run: bun run build:pages
