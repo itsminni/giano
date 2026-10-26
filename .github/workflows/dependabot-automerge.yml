@@ -1,0 +1,117 @@
+name: Dependabot auto-merge
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions: {}
+
+concurrency:
+  group: dependabot-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  enable:
+    if: >-
+      github.repository == 'itsminni/giano' &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # No checkout or execution of code from the pull request in this workflow.
+      - name: Verify Dependabot metadata and commit signature
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3
+        with:
+          github-token: ${{ github.token }}
+
+      - name: Check update types and required branch protection
+        id: eligibility
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          UPDATED_DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        with:
+          script: |
+            const allowed = new Set([
+              'version-update:semver-patch',
+              'version-update:semver-minor',
+            ]);
+            const updates = JSON.parse(process.env.UPDATED_DEPENDENCIES || '[]');
+            if (!Array.isArray(updates) || !updates.length ||
+                !updates.every(update => allowed.has(update.updateType))) {
+              core.info('Major or unclassified update: manual review required.');
+              return;
+            }
+
+            const { owner, repo } = context.repo;
+            const eventPr = context.payload.pull_request;
+            const { repository } = await github.graphql(`
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  autoMergeAllowed
+                  squashMergeAllowed
+                  ref(qualifiedName: "refs/heads/main") {
+                    branchProtectionRule {
+                      requiresStatusChecks
+                      requiresStrictStatusChecks
+                      requiredStatusCheckContexts
+                    }
+                  }
+                  pullRequest(number: $number) {
+                    id state isDraft headRefOid baseRefName
+                    author { login }
+                    headRepository { nameWithOwner }
+                  }
+                }
+              }
+            `, { owner, repo, number: eventPr.number });
+
+            const protection = repository.ref?.branchProtectionRule;
+            const required = ['quality (ubuntu-latest)', 'quality (windows-latest)', 'website'];
+            if (!repository.autoMergeAllowed || !repository.squashMergeAllowed ||
+                !protection?.requiresStatusChecks || !protection.requiresStrictStatusChecks ||
+                !required.every(name => protection.requiredStatusCheckContexts.includes(name))) {
+              core.setFailed('Enable auto-merge, squash merge and strict branch protection for all three CI checks on main. See .github/DEPENDENCIES.md.');
+              return;
+            }
+
+            const pr = repository.pullRequest;
+            if (pr.state !== 'OPEN' || pr.isDraft || pr.baseRefName !== 'main' ||
+                pr.author?.login !== 'dependabot[bot]' ||
+                pr.headRepository?.nameWithOwner !== `${owner}/${repo}` ||
+                pr.headRefOid !== eventPr.head.sha) {
+              core.info('Pull request changed or is not eligible for auto-merge.');
+              return;
+            }
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: eventPr.number, per_page: 100,
+            });
+            const manifests = new Set([
+              'pyproject.toml', 'uv.lock',
+              'website/giano-weather-vision/package.json',
+              'website/giano-weather-vision/bun.lock',
+            ]);
+            if (!files.length || !files.every(file =>
+                file.status === 'modified' && (manifests.has(file.filename) ||
+                  /^\.github\/workflows\/[^/]+\.ya?ml$/.test(file.filename)))) {
+              core.info('Changes outside dependency files: manual review required.');
+              return;
+            }
+
+            core.setOutput('head-sha', pr.headRefOid);
+            core.setOutput('eligible', 'true');
+
+      - name: Enable auto-merge after required checks
+        if: steps.eligibility.outputs.eligible == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ steps.eligibility.outputs.head-sha }}
+        run: gh pr merge --auto --squash --match-head-commit "$HEAD_SHA" "$PR_NUMBER"
