@@ -52,8 +52,14 @@ function Stat({
   );
 }
 
-export function Home({ onNavigate }: { onNavigate: (t: TabId) => void }) {
+export function Home({ onNavigate }: { onNavigate?: (t: TabId) => void }) {
   const { t, locale } = useI18n();
+  const coverage = [
+    { k: t("home.cover.catalog"), n: catalogCounts.stations },
+    { k: t("home.cover.history"), n: catalogCounts.stationsWithHistory },
+    { k: t("home.cover.examples"), n: catalogCounts.stationsWithExamples },
+    { k: t("home.cover.validation"), n: catalogCounts.stationsWithValidation },
+  ];
   return (
     <div className="space-y-16">
       <section className="glass relative overflow-hidden rounded-[2rem] px-6 py-16 sm:px-12 sm:py-24">
@@ -75,21 +81,23 @@ export function Home({ onNavigate }: { onNavigate: (t: TabId) => void }) {
           <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
             {t("copy.description")}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <button
-              onClick={() => onNavigate("mappa")}
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground transition-transform hover:scale-[1.03]"
-            >
-              {t("home.ctaMap", { n: catalogCounts.stations })}{" "}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => onNavigate("demo")}
-              className="glass rounded-full px-6 py-3 font-medium transition-colors hover:bg-foreground/10"
-            >
-              {t("home.ctaDemo")}
-            </button>
-          </div>
+          {onNavigate && (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                onClick={() => onNavigate("mappa")}
+                className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground transition-transform hover:scale-[1.03]"
+              >
+                {t("home.ctaMap", { n: catalogCounts.stations })}{" "}
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => onNavigate("demo")}
+                className="glass rounded-full px-6 py-3 font-medium transition-colors hover:bg-foreground/10"
+              >
+                {t("home.ctaDemo")}
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -148,56 +156,48 @@ export function Home({ onNavigate }: { onNavigate: (t: TabId) => void }) {
           <p className="mb-4 text-sm text-muted-foreground">
             {t("home.coverNote")}
           </p>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart
-              layout="vertical"
-              data={[
-                { k: t("home.cover.catalog"), n: catalogCounts.stations },
-                {
-                  k: t("home.cover.history"),
-                  n: catalogCounts.stationsWithHistory,
-                },
-                {
-                  k: t("home.cover.examples"),
-                  n: catalogCounts.stationsWithExamples,
-                },
-                {
-                  k: t("home.cover.validation"),
-                  n: catalogCounts.stationsWithValidation,
-                },
-              ]}
-
-              margin={{ left: 10 }}
-            >
-              <CartesianGrid stroke="var(--border)" horizontal={false} />
-              <XAxis
-                type="number"
-                stroke="var(--muted-foreground)"
-                fontSize={11}
-              />
-              <YAxis
-                type="category"
-                dataKey="k"
-                width={100}
-                stroke="var(--muted-foreground)"
-                fontSize={11}
-              />
-              <Tooltip
-                contentStyle={tooltipStyle}
-                cursor={{ fill: "var(--glass)" }}
-              />
-              <Bar
-                dataKey="n"
-                name={t("home.cover.series")}
-                fill="var(--chart-1)"
-                radius={[0, 6, 6, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+          {onNavigate ? (
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart layout="vertical" data={coverage} margin={{ left: 10 }}>
+                <CartesianGrid stroke="var(--border)" horizontal={false} />
+                <XAxis
+                  type="number"
+                  stroke="var(--muted-foreground)"
+                  fontSize={11}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="k"
+                  width={100}
+                  stroke="var(--muted-foreground)"
+                  fontSize={11}
+                />
+                <Tooltip
+                  contentStyle={tooltipStyle}
+                  cursor={{ fill: "var(--glass)" }}
+                />
+                <Bar
+                  dataKey="n"
+                  name={t("home.cover.series")}
+                  fill="var(--chart-1)"
+                  radius={[0, 6, 6, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <dl className="divide-y divide-foreground/10 text-sm">
+              {coverage.map(({ k, n }) => (
+                <div key={k} className="flex justify-between gap-4 py-3">
+                  <dt>{k}</dt>
+                  <dd className="font-semibold tabular-nums">{n}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-5">
+      <section className={onNavigate ? "grid gap-6 lg:grid-cols-5" : ""}>
         <div className="glass rounded-3xl p-6 lg:col-span-2">
           <h3 className="text-lg font-semibold">{t("home.measuredTitle")}</h3>
           <p className="mt-3 text-sm text-muted-foreground">
@@ -214,18 +214,22 @@ export function Home({ onNavigate }: { onNavigate: (t: TabId) => void }) {
           </ul>
         </div>
 
-        <div className="lg:col-span-3">
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <h3 className="text-lg font-semibold">{t("home.networkTitle")}</h3>
-            <button
-              onClick={() => onNavigate("mappa")}
-              className="text-sm font-medium text-accent hover:underline"
-            >
-              {t("home.openMap")}
-            </button>
+        {onNavigate && (
+          <div className="lg:col-span-3">
+            <div className="mb-4 flex items-end justify-between gap-4">
+              <h3 className="text-lg font-semibold">
+                {t("home.networkTitle")}
+              </h3>
+              <button
+                onClick={() => onNavigate("mappa")}
+                className="text-sm font-medium text-accent hover:underline"
+              >
+                {t("home.openMap")}
+              </button>
+            </div>
+            <TrentinoMap compact />
           </div>
-          <TrentinoMap compact />
-        </div>
+        )}
       </section>
     </div>
   );

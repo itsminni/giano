@@ -15,7 +15,14 @@ export default defineConfig(({ command, mode }) => ({
     tanstackStart({
       server: { entry: "server" },
       ...(mode === "pages"
-        ? { spa: { enabled: true, prerender: { outputPath: "/index.html" } } }
+        ? {
+            prerender: {
+              enabled: true,
+              crawlLinks: false,
+              failOnError: true,
+            },
+            pages: [{ path: "/" }],
+          }
         : {}),
     }),
     ...(command === "build" && mode !== "pages"

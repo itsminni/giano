@@ -11,7 +11,7 @@ import { catalogCounts, downstreamResults, GITHUB_URL } from "./data";
 import { useI18n } from "./i18n";
 import type { TabId } from "./Nav";
 
-export function Impact({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
+export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
   const { t, locale } = useI18n();
 
   return (
@@ -209,12 +209,20 @@ export function Impact({ onNavigate }: { onNavigate: (tab: TabId) => void }) {
           {t("impact.useDetail")}
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-5">
-          <button
-            onClick={() => onNavigate("guida")}
+          <a
+            href="#guida"
+            onClick={
+              onNavigate
+                ? (event) => {
+                    event.preventDefault();
+                    onNavigate("guida");
+                  }
+                : undefined
+            }
             className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground"
           >
             {t("impact.useGuide")} <ArrowRight className="h-4 w-4" />
-          </button>
+          </a>
           <a className="text-accent underline" href={GITHUB_URL}>
             {t("impact.useCode")}
           </a>
