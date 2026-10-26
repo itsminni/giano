@@ -4,7 +4,8 @@ const assert = require('node:assert/strict');
 const { test } = require('node:test');
 
 // Exercise the exact privileged workflow code without network calls or tokens.
-const workflow = readFileSync(resolve(__dirname, '../workflows/dependabot-automerge.yml'), 'utf8');
+const workflow = readFileSync(resolve(__dirname, '../workflows/dependabot-automerge.yml'), 'utf8')
+  .replace(/\r\n/g, '\n');
 const script = workflow.match(/          script: \|\n([\s\S]*?)\n      - name: Enable auto-merge/)[1]
   .split('\n').map(line => line.replace(/^ {12}/, '')).join('\n');
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
