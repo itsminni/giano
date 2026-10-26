@@ -14,12 +14,14 @@ const required = ['quality (ubuntu-latest)', 'quality (windows-latest)', 'websit
 
 function baseline() {
   return {
+    eventAuthorId: 49699333,
     updates: [{ updateType: 'version-update:semver-patch' }, { updateType: 'version-update:semver-minor' }],
     repository: {
       autoMergeAllowed: true, squashMergeAllowed: true,
       pullRequest: {
         state: 'OPEN', isDraft: false, headRefOid: 'expected-head', baseRefName: 'main',
-        author: { login: 'dependabot[bot]' }, headRepository: { nameWithOwner: 'itsminni/giano' },
+        author: { __typename: 'Bot', databaseId: 49699333, login: 'dependabot' },
+        headRepository: { nameWithOwner: 'itsminni/giano' },
       },
     },
     rules: [{
@@ -62,7 +64,9 @@ async function run(state) {
   try {
     await evaluate(github, {
       repo: { owner: 'itsminni', repo: 'giano' },
-      payload: { pull_request: { number: 42, head: { sha: 'expected-head' } } },
+      payload: { pull_request: {
+        number: 42, head: { sha: 'expected-head' }, user: { id: state.eventAuthorId },
+      } },
     }, {
       info: () => {},
       setFailed: message => failures.push(message),
@@ -96,7 +100,10 @@ const cases = [
   ['draft PR', s => { s.repository.pullRequest.isDraft = true; }, false],
   ['closed PR', s => { s.repository.pullRequest.state = 'CLOSED'; }, false],
   ['wrong base branch', s => { s.repository.pullRequest.baseRefName = 'other'; }, false],
-  ['human PR author', s => { s.repository.pullRequest.author.login = 'someone'; }, false],
+  ['human PR author', s => { s.repository.pullRequest.author.__typename = 'User'; }, false],
+  ['different bot identity', s => { s.repository.pullRequest.author.databaseId = 1; }, false],
+  ['event and live author differ', s => { s.eventAuthorId = 1; }, false],
+  ['missing live author', s => { s.repository.pullRequest.author = null; }, false],
   ['fork PR', s => { s.repository.pullRequest.headRepository.nameWithOwner = 'other/giano'; }, false],
   ['head changed after event', s => { s.repository.pullRequest.headRefOid = 'new-head'; }, false],
   ['no changed files', s => { s.files = []; }, false],
