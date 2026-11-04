@@ -8,7 +8,7 @@ Giano's website, built with React and TanStack Start.
 
 ## Run locally
 
-Install Node.js 24 and Bun. From the repository root:
+Install Node.js 24 and Bun 1.4.4 (the CI version). From the repository root:
 
 ```bash
 cd website/giano-weather-vision
@@ -58,6 +58,7 @@ Example direct links:
 ## Check and prepare the build
 
 ```bash
+bun audit
 bun run check
 bun test
 bun run lint
@@ -82,7 +83,7 @@ Sito di Giano, realizzato con React e TanStack Start.
 
 ## Avviare in locale
 
-Installare Node.js 24 e Bun. Dalla radice della repository:
+Installare Node.js 24 e Bun 1.4.4 (la versione della CI). Dalla radice della repository:
 
 ```bash
 cd website/giano-weather-vision
@@ -132,12 +133,12 @@ Link diretto di esempio:
 ## Controllare e preparare la build
 
 ```bash
+bun audit
 bun run check
 bun test
 bun run lint
 bun run build
 ```
-
 
 ## GitHub Pages
 
