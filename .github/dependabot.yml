@@ -6,8 +6,7 @@ updates:
   - package-ecosystem: uv
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: "07:00"
       timezone: Europe/Rome
     open-pull-requests-limit: 1
@@ -26,8 +25,7 @@ updates:
   - package-ecosystem: bun
     directory: /website/giano-weather-vision
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: "07:00"
       timezone: Europe/Rome
     open-pull-requests-limit: 5
@@ -72,8 +70,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: monday
+      interval: monthly
       time: "07:00"
       timezone: Europe/Rome
     open-pull-requests-limit: 1
