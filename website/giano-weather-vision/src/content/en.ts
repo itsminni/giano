@@ -21,10 +21,8 @@ export default {
   "nav.demo": "Demo",
   "nav.menu": "Open menu",
   "nav.lang": "Language",
-  "copy.description":
-    "Giano reconstructs missing weather data using nearby measurements in time and space. Explore 497 series from 171 Meteotrentino stations processed by the model.",
   "copy.results":
-    "To evaluate Giano, we hid some measurements and compared the reconstructions with the originals. These results average 13 tests, each repeated with five random seeds over the validation period.",
+    "Mean absolute error per measured hour across 480 simulated outages in 2020. Gaps lasted 1 or 6 hours, or 7, 30 or 90 days. Giano uses local context and the station reference.",
   "copy.example":
     "Each example contains 72 hourly observations, some hidden for the test. The chart brings together the visible inputs, hidden measurements and reconstruction.",
   "copy.noValidation": "No evaluation results are available for this variable.",
@@ -35,7 +33,28 @@ export default {
   "var.wind_speed": "Wind speed",
   "var.wind_direction": "Wind direction",
   "home.badge": "WebValley 2025 · Meteotrentino",
-  "home.subtitle": "Reconstruction of weather observations",
+  "map.archiveIntro":
+    "Explore Meteotrentino observations and reconstructions from the first release, station by station.",
+  "home.modelTitle": "How Giano reconstructs a reading",
+  "home.modelInputs":
+    "Giano builds a reference from nearby stations, external weather fields or local history. Two networks read six variables together and estimate corrections for temperature, humidity, pressure and rain.",
+  "home.modelOutputs":
+    "For gaps of a week or longer, Giano can learn how nearby stations track local temperature and wind. Giano preserves each observation and records how it estimated each missing value. Gaps without a usable reference stay visible.",
+  "home.modelLink": "Model architecture",
+  "home.archiveTitle": "Meteotrentino archive from the first release",
+  "home.resultsLink": "Results by duration and variable",
+  "impact.swissTitle": "Eight stations in Switzerland",
+  "impact.swissDesign":
+    "Mean absolute temperature error during 30-day outages with nearby stations reporting, 2023–2024.",
+  "impact.swissScore": "1.01 °C",
+  "impact.germanyTitle": "Sixteen stations in Germany",
+  "impact.germanyDesign":
+    "Mean temperature error with local context during 30-day gaps with neighbours reporting around Hamburg and Munich.",
+  "impact.germanyScore": "0.79 °C",
+  "impact.studyLink": "Data and protocol",
+  "impact.linear": "Interpolation",
+  "impact.stationMode": "Giano",
+  "home.subtitle": "Filling gaps in hourly weather records",
   "home.ctaMap": "Explore the {n} stations",
   "home.ctaDemo": "Watch the demo",
   "home.heroAlt":
@@ -44,9 +63,7 @@ export default {
   "home.stat2": "Processed station–variable series",
   "home.stat3": "Missing hourly values reconstructed",
   "home.stat4": "Stations evaluated on hidden measurements",
-  "home.errorTitle": "How close is the reconstruction?",
-  "home.errorNote":
-    "MAE is the mean absolute error. RMSE is the average of the individual case/seed RMSEs. Each variable keeps its own unit.",
+  "home.errorTitle": "Gap filling in Trentino",
   "home.coverTitle": "Network coverage",
   "home.coverNote":
     "Stations with data, examples and evaluation results. A station can belong to more than one group.",
@@ -112,35 +129,7 @@ export default {
   "map.legend.boundary": "Boundary: © OpenStreetMap contributors",
   "impact.title": "Impact",
   "impact.intro":
-    "When a station stops recording, it leaves a gap in the record. Giano uses the available data to reconstruct it.",
-  "impact.h1": "Why Giano is needed",
-  "impact.p1":
-    "Faults and maintenance can interrupt measurements. Giano reconstructs missing values using station observations and, where available, ERA5 reanalysis data, without changing existing data.",
-  "impact.c1t": "Climate trends",
-  "impact.c1d": "Analysing long-term meteorological series",
-  "impact.c2t": "Water resources",
-  "impact.c2d":
-    "Supporting analyses of precipitation and the hydrological cycle",
-  "impact.c3t": "Alpine monitoring",
-  "impact.c3d":
-    "Reconstructing missing observations from high-altitude stations",
-  "impact.statHistory":
-    "stations processed out of {total} in the Meteotrentino catalogue, for a total of {series} station–variable series and {hours} missing hourly values reconstructed.",
-  "impact.statExamples":
-    "examples across {n} stations: 72-hour windows with hidden data to compare reconstructions with real measurements.",
-  "impact.h2": "Why missing data matters",
-  "impact.p2":
-    "Not all gaps matter in the same way. Losing an hour on a stable day is different from losing the peak of a storm or several consecutive hours of temperature and humidity.",
-  "impact.l1Lead": "Averages and comparisons can change",
-  "impact.l1": "when missing data is concentrated in a specific period.",
-  "impact.l2Lead": "An event may be only partly described",
-  "impact.l2": "if the station stops recording at its most significant moment.",
-  "impact.l3Lead": "Later analyses can be affected",
-  "impact.l3":
-    "when they use an incomplete series, for example in agriculture, water-resource management or forecasting models.",
-  "impact.l4Lead": "Measurements and estimates remain distinct:",
-  "impact.l4":
-    "our charts always show observed data, reconstructions and remaining gaps.",
+    "An outage can hide a storm peak or distort a monthly average. To measure what Giano recovers, we hid known observations and compared estimates on the same hours.",
   "story.title": "How Giano began",
   "story.intro":
     "Giano began at WebValley 2025, Fondazione Bruno Kessler's research summer school. We started with a question from Meteotrentino: how can we recover the observations missing from weather-station records?",
@@ -178,9 +167,13 @@ export default {
   "demo.openText":
     "Notebooks, training pipeline and evaluation of the Giano model.",
   "demo.repo": "View the repository",
+  "demo.era5": "ERA5-Land · supporting signal",
+  "demo.alignedHour": "Same hour",
+  "demo.alignmentNote":
+    "The dotted curve shows ERA5-Land aligned with the station's hourly timeline. It provides context even where local measurements are missing, but its grid cannot capture every detail of the terrain and local microclimate: it does not replace station observations.",
   "footer.text":
     "A project started at FBK WebValley 2025, working with Meteotrentino station data.",
-  "footer.badge": "Project for Premio GF Marilli 2026",
+  "footer.badge": "Finalist · Premio G.F. Marilli 2026",
   "footer.copy":
     "© {year} Team Giano · Data: Provincia autonoma di Trento — Meteotrentino",
   "nav.guida": "Use Giano",
@@ -232,25 +225,30 @@ export default {
   "guide.installTitle": "1. Set up the environment",
   "guide.installText":
     "Install Git and uv, then clone the repository and create the Python 3.11 environment. Run the commands below in a terminal.",
-  "guide.weightsTitle": "2. Add data and weights",
+  "guide.weightsTitle": "2. Prepare the data",
   "guide.weightsText":
-    "Download the dataset from Google Drive and keep its directory structure under data/. Trained weights go separately under checkpoints/; the wiki describes the paths and reproduction package.",
+    "The official weights ship with Giano. For the Trentino training and evaluation, download the Drive dataset and put 1-raw and 2-processed-v2 under data/. The small Swiss example ships with the repository.",
   "guide.runTitle": "3. Reconstruct a variable",
   "guide.runText":
-    "This command uses the trained temperature model and saves the reconstruction to new NetCDF files. It preserves original observations and leaves gaps empty where context is insufficient.",
+    "Select a period and a variable. The output NetCDF preserves observations and labels each estimate or reason for withholding it.",
   "guide.commandNote":
-    "Use giano-impute for inference. The giano command instead starts the preparation and training pipeline.",
-  "guide.datasetTitle": "Data from another network",
+    "Add --contemporary-only to require a contemporary physical reference.",
+  "guide.datasetTitle": "4. Use data from another network",
   "guide.datasetText":
-    "You need observations, station coordinates and a YAML configuration describing columns, units, time zone and quality codes. The importer creates the common format; model accuracy then needs evaluating on the new data.",
-  "guide.exampleText": "examples/datasets shows how to organise the files.",
-  "guide.contextTitle": "What do the 72 hours mean?",
-  "guide.contextText":
-    "Giano reads 72 hours at a time, moving the window along the record. Some measurements must be available to reconstruct the missing ones. The notebooks show the process on real examples.",
+    "The observations CSV contains station_id, timestamp and measured variables. The catalogue contains station_id, latitude and longitude.",
+  "guide.exampleText":
+    "The wiki specifies units and missing-value conventions.",
   "guide.wiki": "Full guide in the wiki",
-  "guide.release": "Data, weights and reproduction",
+  "guide.release": "Formats and units",
   "guide.dataset": "External dataset guide",
-  "guide.notebooks": "Open the notebooks",
+  "guide.stationOptions":
+    "The Trentino results use --local-context for local observations and --station-reference for pressure and wind direction. Enable both options in the command.",
+  "guide.trainTitle": "5. Train and evaluate Giano",
+  "guide.trainText":
+    "Prepare the Trentino windows, train both ensemble members and score the resulting weights on the historical outages. Training selects CUDA on compatible NVIDIA GPUs, Metal on supported Macs, or CPU.",
+  "guide.trainLink": "Training and reproduction guide",
+  "demo.gap": "Missing data",
+  "demo.hour": "Hour {hour}",
   "guide.copy": "Copy command",
   "guide.copied": "Copied",
   "guide.copyFailed": "Select and copy the command below.",
@@ -263,12 +261,13 @@ export default {
   "story.evolution1":
     "We kept working on the project after WebValley. Moving to ImputeFormer let us study temporal context and relationships between stations together. Precipitation, humidity, pressure and wind direction joined the original two variables.",
   "story.evolution2":
-    "The current model starts from interpolation and learns a correction for longer gaps. Around it, we built data preparation, training and comparisons with simpler methods. These checks also led us to correct the data filtering and training objective before repeating the experiments.",
+    "The first release corrected interpolation with one network per variable. The new implementation combines physical references with temporal, spatial and cross-variable attention.",
+  "story.awardFinalist": "Giano was a finalist for the",
   "story.releaseTitle": "From experiments to a usable project",
   "story.release1":
-    "The comparison now covers six variables, five seeds and 13 gap scenarios. We added an experiment on subsequent forecasts, support for importing other datasets and an initial test on Swiss stations. The notebooks and wiki follow the work from data to results.",
+    "The first release compared six variables, five seeds and thirteen gap scenarios. The station explorer preserves those historical reconstructions.",
   "story.release2":
-    "This website offers another way to explore the work. It lets you choose a station, inspect a reconstruction and browse its history. You can also run the code yourself, independently of the site.",
+    "We then tested the Trentino-trained weights on other networks. Studies in Switzerland and Germany showed when readings from nearby stations help and when interpolation between two readings of the same sensor works well.",
   "story.sources": "Sources and further reading",
   "story.sourceSchool": "The WebValley 2025 challenge",
   "story.sourceMagazine": "The story in FBK Magazine",
@@ -280,32 +279,19 @@ export default {
     "To Meteotrentino for the station data and for giving us a real problem to work on.",
   "story.thanksSchool":
     "To Fondazione Bruno Kessler for the WebValley experience, and to the researchers and tutors who supported us. The time and knowledge they shared helped get this project started.",
-  "impact.downstreamTitle": "Can better reconstruction help a later forecast?",
+  "impact.downstreamTitle": "Forecasting after gap filling",
   "impact.downstreamIntro":
-    "We tested this in a downstream experiment: a subsequent use of the data. We took one small forecasting model, trained on complete histories, and gave it a damaged series followed by the same series repaired by Giano. The forecaster stays the same, only its input history changes.",
-  "impact.downstreamProtocol":
-    "The forecasts cover the next 1, 6, 12 and 24 hours. Giano sees only the history available at the forecast time, without access to future values.",
+    "Ridge forecasts 1, 6, 12 and 24 hours ahead from a repaired 72-hour series. Both repair methods can use the preceding seven days.",
   "impact.downstreamCaption":
-    "Forecast error (MAE) · mean over five seeds, four gap types and four forecast horizons",
+    "Mean absolute forecast error on 16,000 forecasts per station and variable (lower is better)",
   "impact.downstreamVariable": "Variable and station",
-  "impact.downstreamDamaged": "Damaged history",
-  "impact.downstreamRepaired": "Repaired history",
-  "impact.downstreamReduction": "Error reduction",
-  "impact.downstreamBaseline":
-    "In the damaged history, missing values are replaced with a neutral value: the median.",
-  "impact.downstreamConclusion":
-    "Temperature, humidity and pressure improve in this test. Precipitation gets slightly worse and wind direction changes little. These results cover one station per variable.",
   "impact.downstreamLink": "Full method and results",
   "impact.useTitle": "Use Giano with your own data",
   "impact.useText":
-    "The project goes beyond the stations on the map. You can run Giano on your computer, use the released weights or train new models. To import another network, provide CSV observations, station coordinates and a file describing their format.",
+    "You can run Giano locally with the included weights. For a new network, supply hourly observations and station coordinates.",
   "impact.useDetail":
     "The guide takes you from installation to your first reconstruction.",
   "impact.useGuide": "How to use Giano",
   "impact.useCode": "Browse the code",
-  "demo.era5": "ERA5-Land · supporting signal",
-  "demo.alignedHour": "Same hour",
-  "demo.alignmentNote":
-    "The dotted curve shows ERA5-Land aligned with the station's hourly timeline. It provides context even where local measurements are missing, but its grid cannot capture every detail of the terrain and local microclimate: it does not replace station observations.",
-  "guide.downloadData": "Dataset on Google Drive",
+  "guide.downloadData": "Download Meteotrentino data on Google Drive",
 };

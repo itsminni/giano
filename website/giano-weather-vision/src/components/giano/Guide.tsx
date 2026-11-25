@@ -6,17 +6,13 @@ import { DATASET_URL, GITHUB_URL } from "./data";
 
 const install = `git clone https://github.com/itsminni/giano.git
 cd giano
-uv sync --locked --python 3.11 --inexact
+uv sync --locked --python 3.11
 uv run --locked pytest -q`;
-const reconstruct = `uv run --locked giano-impute \\
-  --data-dir data/2-processed-v2 --variables temperature \\
-  --checkpoint-dir checkpoints/corrected_v2_spectral/imputeformer \\
-  --model-family imputeformer --seed 42 --fallback none \\
-  --output-dir artifacts/imputed/my-temperature-run`;
-const importData = `uv run --locked giano-dataset import \\
-  --config /path/to/import.yaml --output-dir data/external/my-network/processed
-uv run --locked giano-dataset validate \\
-  --data-dir data/external/my-network/processed`;
+const reconstruct = `uv run --locked giano --input weather.nc \\
+  --start 2024-03-01 --end-exclusive 2024-04-01 \\
+  --variables temperature --local-context --station-reference --output march.nc`;
+const importData = `uv run --locked giano --input examples/noaa-2024/observations.csv --stations examples/noaa-2024/stations.csv \\
+  --start 2024-03-01 --end-exclusive 2024-04-01 --local-context --station-reference --output swiss-march.nc`;
 
 function Command({ value }: { value: string }) {
   const { t } = useI18n();
@@ -74,7 +70,7 @@ export function Guide() {
         </a>
         <a
           className="mt-4 inline-flex items-center gap-2 text-accent underline"
-          href={`${GITHUB_URL}/wiki/Release-and-Reproduction`}
+          href={`${GITHUB_URL}/wiki/Input-and-output`}
         >
           {t("guide.release")} <ExternalLink className="h-4 w-4" />
         </a>
@@ -86,6 +82,9 @@ export function Guide() {
         <p className="text-sm text-muted-foreground">
           {t("guide.commandNote")}
         </p>
+        <p className="mt-3 max-w-prose text-sm text-muted-foreground">
+          {t("guide.stationOptions")}
+        </p>
       </section>
       <section className="glass rounded-3xl p-6 sm:p-8">
         <h2 className="text-2xl font-semibold">{t("guide.datasetTitle")}</h2>
@@ -96,19 +95,24 @@ export function Guide() {
         </p>
         <a
           className="mt-4 inline-block text-accent underline"
-          href={`${GITHUB_URL}/wiki/Portability-to-New-Datasets`}
+          href={`${GITHUB_URL}/wiki/Input-and-output`}
         >
           {t("guide.dataset")}
         </a>
       </section>
       <section className="glass rounded-3xl p-6 sm:p-8">
-        <h2 className="text-2xl font-semibold">{t("guide.contextTitle")}</h2>
-        <p className="mt-3 text-muted-foreground">{t("guide.contextText")}</p>
+        <h2 className="text-2xl font-semibold">{t("guide.trainTitle")}</h2>
+        <p className="mt-3 text-muted-foreground">{t("guide.trainText")}</p>
+        <Command
+          value={`uv run --locked giano-prepare --data data --output runs/windows
+uv run --locked giano-train --cache runs/windows --output runs/training --fixed-rounds
+uv run --locked giano-evaluate --data data --ensemble runs/training/ensemble.pt --local-context --station-reference --output runs/evaluation`}
+        />
         <a
-          className="mt-4 inline-block text-accent underline"
-          href={`${GITHUB_URL}/tree/main/notebooks`}
+          className="text-accent underline"
+          href={`${GITHUB_URL}/wiki/Training-and-reproduction`}
         >
-          {t("guide.notebooks")}
+          {t("guide.trainLink")}
         </a>
       </section>
       <a

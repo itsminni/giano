@@ -1,14 +1,12 @@
 # Giano Website
 
-[English](#english) · [Italiano](#italiano)
-
-## English
-
 Giano's website, built with React and TanStack Start.
 
 ## Run locally
 
-Install Node.js 24 and Bun 1.4.4 (the CI version). From the repository root:
+Install Node.js 24 and Bun 1.4.4 (the CI version). Download `giano-1.0.0-artifacts.zip` from the original release and extract its `artifacts/website/giano-history` directory. Set `GIANO_SITE_DATA` to the absolute path of that extracted directory if you keep it outside the checkout. [Historical release](https://github.com/itsminni/giano/releases/tag/v1.0.0)
+
+From the repository root, run the following commands.
 
 ```bash
 cd website/giano-weather-vision
@@ -28,6 +26,8 @@ To use another path:
 GIANO_SITE_DATA=/path/to/giano-history bun run prepare:data
 ```
 
+The Home tab explains the model and reports the Trentino reconstruction results using `--local-context --station-reference`. Home and Impact use the same configuration for their Trentino comparisons. Impact covers transfer to Switzerland and Germany and the Ridge forecasting study. Guide includes reconstruction and training commands. The station explorer and its charts display the historical v1 release. For a fresh checkout, the verified data download used by CI is documented in [the Pages workflow](../../.github/workflows/pages.yml).
+
 ## Edit the text
 
 - Italian: [src/content/it.ts](src/content/it.ts).
@@ -40,7 +40,7 @@ GIANO_SITE_DATA=/path/to/giano-history bun run prepare:data
 Edit the sentences in both languages, keeping keys and placeholders such as
 `{n}` unchanged. Counts and metrics come from the exported data.
 
-The animated demo is in [Demo.tsx](src/components/giano/Demo.tsx).
+The [demo](src/components/giano/Demo.tsx) illustrates the five reconstruction steps on a synthetic hourly series, including alignment with ERA5-Land. Measured reconstruction and forecast errors are reported separately in the results.
 
 ## Pages and data
 
@@ -71,81 +71,6 @@ The static version keeps the map, charts and complete series. Historical data
 is gzip-compressed and decompressed by the browser when needed. Recent browsers with `DecompressionStream` support are required.
 
 From the website directory, after `prepare:data`:
-
-```bash
-bun run build:pages
-tar -czf dist/giano-pages.tar.gz -C dist/client .
-```
-
-## Italiano
-
-Sito di Giano, realizzato con React e TanStack Start.
-
-## Avviare in locale
-
-Installare Node.js 24 e Bun 1.4.4 (la versione della CI). Dalla radice della repository:
-
-```bash
-cd website/giano-weather-vision
-bun install --frozen-lockfile
-bun run prepare:data
-bun run dev --host 127.0.0.1
-```
-
-Aprire http://127.0.0.1:8080.
-
-`prepare:data` verifica e copia i dati da `artifacts/website/giano-history`.
-L'export degli storici include i segnali ERA5-Land disponibili nei NetCDF
-processati. I grafici li mostrano su richiesta, senza eseguire nuova inferenza.
-Per usare un altro percorso:
-
-```bash
-GIANO_SITE_DATA=/percorso/giano-history bun run prepare:data
-```
-
-## Modificare il testo
-
-- Italiano: [src/content/it.ts](src/content/it.ts).
-- Inglese: [src/content/en.ts](src/content/en.ts).
-- Comandi della guida: [Guide.tsx](src/components/giano/Guide.tsx).
-- Titolo e descrizione per motori di ricerca: [index.tsx](src/routes/index.tsx)
-  e [__root.tsx](src/routes/__root.tsx).
-- Team e tutor: [data.ts](src/components/giano/data.ts).
-
-Modificare le frasi in entrambe le lingue, mantenendo le chiavi e i segnaposto
-come `{n}`. Conteggi e metriche provengono dai dati esportati.
-
-La demo animata è in [Demo.tsx](src/components/giano/Demo.tsx).
-
-## Pagine e dati
-
-La mappa legge il catalogo da `src/generated/catalog.json` e carica esempi e
-serie storiche da `public/data/giano`. Queste cartelle sono generate da
-`prepare:data` e non sono incluse in Git. Le serie sono suddivise per anno.
-
-Link diretto di esempio:
-
-```text
-/?tab=mappa&station=T0063&variable=temperature
-/?tab=guida
-```
-
-## Controllare e preparare la build
-
-```bash
-bun audit
-bun run check
-bun test
-bun run lint
-bun run build
-```
-
-## GitHub Pages
-
-La versione statica mantiene mappa, grafici e serie complete. Gli storici vengono
-compressi in gzip e decompressi dal browser quando servono. Servono browser recenti con supporto a `DecompressionStream`.
-
-Dalla cartella del sito, dopo `prepare:data`:
 
 ```bash
 bun run build:pages

@@ -19,7 +19,8 @@ import {
 import {
   DATASET_URL,
   demoSeries,
-  downstreamResults,
+  extendedRepairResults,
+  reconstructionResults,
   team,
   webvalleyTutor,
 } from "../src/components/giano/data";
@@ -87,10 +88,10 @@ test("the readable page exposes public text and working anchors without JavaScri
     expect(html).toContain(`id="${section}"`);
     expect(html).toContain(`href="#${section}"`);
   }
-  expect(html).toContain(it["copy.description"]);
+  expect(html).toContain(it["home.modelTitle"]);
   expect(html).toContain(it["impact.downstreamTitle"]);
   expect(html).toContain("Gabriele Mininni");
-  expect(html).toContain("giano-impute");
+  expect(html).toContain("giano --input");
   expect(html).toContain("<table");
   expect(html).not.toMatch(/<(?:button|input|select|canvas)\b/);
   expect(html).not.toContain("recharts-responsive-container");
@@ -189,41 +190,96 @@ describe("Station navigation and credits", () => {
     expect(html).not.toContain("Domenico");
     expect(html).toContain(it["story.tutorNote"]);
     expect(html).toContain(it["story.thanksData"]);
+    const evolution = html
+      .split(it["story.evolutionTitle"])[1]
+      ?.split(it["story.releaseTitle"])[0];
+    expect(evolution).toContain(it["story.awardFinalist"]);
+    expect(evolution).toContain("https://projects.hackersgen.com/progetti/2026");
     expect(html).toContain(it["story.thanksSchool"].replaceAll("'", "&#x27;"));
     expect(html).toContain(
       "https://magazine.fbk.eu/en/news/challenges-that-make-you-grow/",
     );
   });
 
+  test("home reconstruction scores weight each measured hour equally", () => {
+    const csv = readFileSync(
+      resolve(
+        import.meta.dir,
+        "../../../examples/trentino/station-context-scores.csv",
+      ),
+      "utf8",
+    )
+      .trim()
+      .split(/\r?\n/);
+    const fields = csv.shift()!.split(",");
+    const lines = csv.map((line) => line.split(","));
+    for (const result of reconstructionResults) {
+      let hours = 0;
+      let error = 0;
+      for (const row of lines) {
+        if (row[fields.indexOf("variable")] !== result.key) continue;
+        const paired = Number(row[fields.indexOf("paired")]);
+        hours += paired;
+        error += paired * Number(row[fields.indexOf("giano_mae")]);
+      }
+      expect(hours).toBeGreaterThan(0);
+      expect(result.mae).toBeCloseTo(error / hours, 7);
+    }
+  });
   test("impact shows downstream forecast errors and a route to independent use", () => {
     const html = render(createElement(Impact, { onNavigate: () => {} }));
-    expect(downstreamResults).toHaveLength(5);
-    expect(
-      downstreamResults
-        .filter((row) => row.giano > row.corrupted)
-        .map((row) => row.variable),
-    ).toEqual(["precipitation"]);
-    for (const row of downstreamResults) expect(html).toContain(row.station);
-    expect(html).toContain(it["impact.downstreamBaseline"]);
-    expect(html).toContain(
-      it["impact.downstreamConclusion"].replaceAll("'", "&#x27;"),
-    );
+    expect(html).toContain(it["impact.swissScore"]);
+    expect(html).toContain(it["impact.germanyScore"]);
+    expect(extendedRepairResults.map((row) => row.variable)).toEqual([
+      "temperature",
+      "humidity",
+      "pressure",
+      "precipitation",
+      "wind_direction",
+    ]);
+    const context = readFileSync(
+      resolve(import.meta.dir, "../../../examples/ridge/context-scores.csv"),
+      "utf8",
+    )
+      .trim()
+      .split(/\r?\n/)
+      .slice(1)
+      .map((line) => line.split(","));
+    for (const row of extendedRepairResults) {
+      expect(html).toContain(row.station);
+      for (const [method, value] of [
+        ["interpolation-7d", row.linear],
+        ["giano-7d", row.giano],
+      ] as const) {
+        const record = context.find(
+          ([variable, station, , design, name]) =>
+            variable === row.variable &&
+            station === row.station &&
+            design === "historical-72h" &&
+            name === method,
+        );
+        expect(record?.[5]).toBe("16000");
+        expect(value).toBe(Number(record?.[6]));
+        expect(html).toContain(
+          value.toLocaleString("it-IT", {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3,
+          }),
+        );
+      }
+    }
     expect(html).toContain(it["impact.useGuide"]);
     expect(render(createElement(Guide))).toContain(
       DATASET_URL.replaceAll("&", "&amp;"),
     );
   });
 
-  test("the illustrative ERA5 curve supplies distinct values aligned with every hour", () => {
+  test("the illustrative demo aligns the hourly support signal across the gap", () => {
     expect(demoSeries).toHaveLength(48);
     expect(
-      demoSeries.every(
-        (point, i) => point.t === i && Number.isFinite(point.era5),
-      ),
-    ).toBe(true);
-    const gap = demoSeries.filter((point) => point.osservato === null);
-    expect(gap).toHaveLength(15);
-    expect(gap.every((point) => point.era5 !== point.vero)).toBe(true);
+      demoSeries.filter((row) => row.osservato === null).map((row) => row.t),
+    ).toEqual(Array.from({ length: 15 }, (_, i) => 16 + i));
+    expect(demoSeries.every((row) => Number.isFinite(row.era5))).toBe(true);
   });
 
   test("station rows are buttons, availability is text and variable controls sit with the chart", () => {
@@ -269,7 +325,9 @@ describe("Station navigation and credits", () => {
 
   test("both languages use the project and event names consistently", () => {
     for (const content of [it, en]) {
-      expect(content["footer.badge"]).toContain("Premio GF Marilli 2026");
+      expect(content["footer.badge"]).toMatch(
+        /Finalist.*Premio G\.F\. Marilli 2026/,
+      );
       expect(content["home.badge"]).toContain("WebValley");
       expect(JSON.stringify(content)).not.toMatch(
         /Web Valley|Meteo Trentino|HackersGen/,
