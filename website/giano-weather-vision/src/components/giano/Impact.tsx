@@ -1,10 +1,19 @@
 import { ArrowRight } from "lucide-react";
-import { extendedRepairResults, GITHUB_URL } from "./data";
+import {
+  extendedRepairResults,
+  GITHUB_URL,
+  reconstructionResults,
+} from "./data";
 import { useI18n } from "./i18n";
 import type { TabId } from "./Nav";
 
 export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
   const { t, locale } = useI18n();
+  const format = (value: number) =>
+    value.toLocaleString(locale, {
+      maximumFractionDigits: 3,
+      minimumFractionDigits: 3,
+    });
 
   return (
     <div className="space-y-16">
@@ -35,6 +44,73 @@ export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
             </a>
           </article>
         ))}
+      </section>
+      <section
+        id="trentino-comparison"
+        className="glass rounded-[2rem] p-6 sm:p-8"
+      >
+        <h3 className="mt-2 font-display text-3xl font-bold">
+          {t("impact.trentinoTitle")}
+        </h3>
+        <div
+          className="mt-4 max-w-full overflow-x-auto"
+          role="region"
+          aria-label={t("impact.trentinoTitle")}
+          tabIndex={0}
+        >
+          <table className="w-full text-left text-sm">
+            <caption className="pb-4 text-left leading-relaxed text-muted-foreground">
+              {t("impact.trentinoCaption")}
+            </caption>
+            <thead className="border-b border-foreground/20 text-muted-foreground">
+              <tr>
+                <th scope="col" className="py-2 pr-3">
+                  {t("impact.trentinoVariable")}
+                </th>
+                <th scope="col" className="px-2 py-2 text-right">
+                  BiLSTM
+                  <span className="block text-xs font-normal">
+                    WebValley 2025
+                  </span>
+                </th>
+                <th scope="col" className="px-2 py-2 text-right">
+                  Giano 1.0
+                </th>
+                <th
+                  scope="col"
+                  className="py-2 pl-2 text-right text-foreground"
+                >
+                  Giano
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-foreground/10">
+              {reconstructionResults.map((row) => (
+                <tr key={row.key} className="tabular-nums">
+                  <th scope="row" className="py-3 pr-3 font-medium">
+                    {t(`var.${row.key}`)}{" "}
+                    <span className="whitespace-nowrap font-normal text-muted-foreground">
+                      ({row.unit})
+                    </span>
+                  </th>
+                  <td className="px-2 py-3 text-right">{format(row.bilstm)}</td>
+                  <td className="px-2 py-3 text-right">
+                    {format(row.firstRelease)}
+                  </td>
+                  <td className="py-3 pl-2 text-right font-semibold text-accent">
+                    {format(row.mae)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <a
+          className="mt-4 inline-block text-sm text-accent underline"
+          href={`${GITHUB_URL}/wiki/Model-and-evidence#comparison-with-the-first-release-on-the-same-missing-hours`}
+        >
+          {t("home.resultsLink")}
+        </a>
       </section>
       <section className="glass rounded-[2rem] p-6 sm:p-8">
         <h3 className="mt-2 font-display text-3xl font-bold">
@@ -67,32 +143,25 @@ export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-foreground/10">
-              {extendedRepairResults.map((row) => {
-                const format = (value: number) =>
-                  value.toLocaleString(locale, {
-                    maximumFractionDigits: 3,
-                    minimumFractionDigits: 3,
-                  });
-                return (
-                  <tr key={row.variable}>
-                    <th scope="row" className="py-4 pr-5 font-medium">
-                      {t(`var.${row.variable}`)}{" "}
-                      <span className="font-normal text-muted-foreground">
-                        ({row.unit})
-                      </span>
-                      <span className="block text-xs font-normal text-muted-foreground">
-                        {row.station}
-                      </span>
-                    </th>
-                    <td className="px-3 py-4 text-right tabular-nums">
-                      {format(row.linear)}
-                    </td>
-                    <td className="py-4 pl-3 text-right tabular-nums">
-                      {format(row.giano)}
-                    </td>
-                  </tr>
-                );
-              })}
+              {extendedRepairResults.map((row) => (
+                <tr key={row.variable}>
+                  <th scope="row" className="py-4 pr-5 font-medium">
+                    {t(`var.${row.variable}`)}{" "}
+                    <span className="font-normal text-muted-foreground">
+                      ({row.unit})
+                    </span>
+                    <span className="block text-xs font-normal text-muted-foreground">
+                      {row.station}
+                    </span>
+                  </th>
+                  <td className="px-3 py-4 text-right tabular-nums">
+                    {format(row.linear)}
+                  </td>
+                  <td className="py-4 pl-3 text-right tabular-nums">
+                    {format(row.giano)}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

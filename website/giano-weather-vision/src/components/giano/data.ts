@@ -12,12 +12,36 @@ export const unitLabels: Record<string, string> = {
   degrees: "°",
   deg: "°",
 };
-// Hour-weighted MAE from station-context-scores.csv.
+// Hour-weighted MAE from station-context-scores.csv and its paired controls in release-comparison.csv.
 export const reconstructionResults = [
-  { key: "temperature", unit: "°C", mae: 1.8943192 },
-  { key: "humidity", unit: "%", mae: 12.57287779 },
-  { key: "pressure", unit: "hPa", mae: 4.35757729 },
-  { key: "precipitation", unit: "mm", mae: 0.11226068 },
+  {
+    key: "temperature",
+    unit: "°C",
+    mae: 1.8943192,
+    bilstm: 4.69895384,
+    firstRelease: 4.67991046,
+  },
+  {
+    key: "humidity",
+    unit: "%",
+    mae: 12.57287779,
+    bilstm: 18.7261954,
+    firstRelease: 18.55045027,
+  },
+  {
+    key: "pressure",
+    unit: "hPa",
+    mae: 4.35757729,
+    bilstm: 6.0438046,
+    firstRelease: 5.98686316,
+  },
+  {
+    key: "precipitation",
+    unit: "mm",
+    mae: 0.11226068,
+    bilstm: 0.19171441,
+    firstRelease: 0.19008985,
+  },
 ];
 export const validationInfo = {
   seeds: catalog.results.seeds,

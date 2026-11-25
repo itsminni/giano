@@ -194,7 +194,9 @@ describe("Station navigation and credits", () => {
       .split(it["story.evolutionTitle"])[1]
       ?.split(it["story.releaseTitle"])[0];
     expect(evolution).toContain(it["story.awardFinalist"]);
-    expect(evolution).toContain("https://projects.hackersgen.com/progetti/2026");
+    expect(evolution).toContain(
+      "https://projects.hackersgen.com/progetti/2026",
+    );
     expect(html).toContain(it["story.thanksSchool"].replaceAll("'", "&#x27;"));
     expect(html).toContain(
       "https://magazine.fbk.eu/en/news/challenges-that-make-you-grow/",
@@ -224,6 +226,43 @@ describe("Station navigation and credits", () => {
       }
       expect(hours).toBeGreaterThan(0);
       expect(result.mae).toBeCloseTo(error / hours, 7);
+    }
+  });
+  test("the Trentino comparison shows the three models on the paired historical targets", () => {
+    const [header, ...rows] = readFileSync(
+      resolve(
+        import.meta.dir,
+        "../../../examples/trentino/release-comparison.csv",
+      ),
+      "utf8",
+    )
+      .trim()
+      .split(/\r?\n/);
+    const fields = header!.split(",");
+    const records = rows.map((row) => row.split(","));
+    const html = render(createElement(Impact));
+    const comparison = html.match(
+      /<section id="trentino-comparison"[^>]*>(.*?)<\/section>/s,
+    )?.[1];
+    expect(comparison).toContain(it["impact.trentinoTitle"]);
+    expect(comparison).not.toContain("<details");
+    expect(comparison).toContain("WebValley 2025");
+    expect(comparison?.match(/scope="row"/g)).toHaveLength(4);
+    for (const { key, mae, bilstm, firstRelease } of reconstructionResults) {
+      const paired = records.find(
+        (row) =>
+          row[0] === key && [1, 8, 9].every((index) => row[index] === "all"),
+      );
+      expect(bilstm).toBe(Number(paired?.[fields.indexOf("bilstm_mae")]));
+      expect(firstRelease).toBe(Number(paired?.[fields.indexOf("giano1_mae")]));
+      for (const value of [mae, bilstm, firstRelease]) {
+        expect(comparison).toContain(
+          value.toLocaleString(it.locale, {
+            minimumFractionDigits: 3,
+            maximumFractionDigits: 3,
+          }),
+        );
+      }
     }
   });
   test("impact shows downstream forecast errors and a route to independent use", () => {

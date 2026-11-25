@@ -78,7 +78,7 @@ In the historical Meteotrentino evaluation we hid measured hours at 16 stations.
 | Station pressure (hPa) | 4.358 | 5.987 | 6.034 |
 | Precipitation (mm) | 0.112 | 0.190 | 0.193 |
 
-Giano improved on the first release in 41 of 60 comparisons by variable, outage duration and available inputs. Fifteen of the 19 higher errors occurred on one- or six-hour gaps. The Trentino comparison had no paired wind observations.
+Giano improved on the first release in 41 of 60 comparisons by variable, outage duration and available inputs. Fifteen of the 19 higher errors occurred on one- or six-hour gaps. The Trentino comparison had no paired wind observations. [Full comparison, including the WebValley BiLSTM](https://github.com/itsminni/giano/wiki/Model-and-evidence#comparison-with-the-first-release-on-the-same-missing-hours)
 
 In Switzerland, Giano had lower average error than calibrated neighbours at each of eight stations for temperature, wind speed and wind direction during 7- and 30-day outages. For 30-day temperature gaps, the errors were **1.01 °C** for Giano and **1.85 °C** for calibrated neighbours. On six-hour gaps, linear interpolation was more accurate for temperature and wind speed. [Gap-filling evaluation](https://github.com/itsminni/giano/wiki/Model-and-evidence)
 

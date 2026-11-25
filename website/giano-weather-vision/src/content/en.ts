@@ -54,6 +54,10 @@ export default {
   "impact.studyLink": "Data and protocol",
   "impact.linear": "Interpolation",
   "impact.stationMode": "Giano",
+  "impact.trentinoTitle": "Model comparison in Trentino",
+  "impact.trentinoCaption":
+    "Mean absolute error on the same hidden hours in Trentino in 2020. The BiLSTM is the retrained benchmark version of the WebValley 2025 prototype.",
+  "impact.trentinoVariable": "Variable",
   "home.subtitle": "Filling gaps in hourly weather records",
   "home.ctaMap": "Explore the {n} stations",
   "home.ctaDemo": "Watch the demo",
