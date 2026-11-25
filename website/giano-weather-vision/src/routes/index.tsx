@@ -16,9 +16,9 @@ import { Footer } from "@/components/giano/Footer";
 import { LanguageProvider, useI18n } from "@/components/giano/i18n";
 import { ReadableSite } from "@/components/giano/ReadableSite";
 
-const title = "Giano — Ricostruzione dei dati meteo del Trentino";
+const title = "Giano — Ricostruzione delle misure meteo mancanti";
 const description =
-  "Giano ricostruisce osservazioni meteorologiche mancanti. Esplora le serie di 171 stazioni Meteotrentino, gli esempi di ricostruzione e la guida all'uso.";
+  "Come Giano ricostruisce le misure orarie mancanti, dai risultati in Trentino, Svizzera e Germania alla mappa delle stazioni Meteotrentino.";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -92,7 +92,6 @@ function Site() {
   };
 
   // Serve the same public text to readers and crawlers before JavaScript runs.
-  // Interactive views take over only after hydration, preserving shared URLs.
   if (!hydrated) return <ReadableSite />;
 
   return (

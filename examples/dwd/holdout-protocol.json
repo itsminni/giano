@@ -1,0 +1,270 @@
+{
+  "sha256": {
+    "src/giano/__init__.py": "1c499cc48860b107e0a3e5c16cb53a7fc34d52ac7c4700528147b9064a07ed55",
+    "src/giano/calibrated_neighbors.py": "6df59e2bfeafc7c2f782ddd4d3e638bbbf64668fff3ff7ee3ba9945c281431d2",
+    "src/giano/data.py": "0f60b4cf2e5b8a25865f66e68c9b585bb543df35ec1424fe419d211eadffd390",
+    "src/giano/evaluate.py": "02da859d3e28e26e7196ce6bc9131b3cfa1ea8300d02194f700522cdbaa6970d",
+    "src/giano/fill.py": "c00b9ceaa24376dd28ce33e1cba4d5778903a5acaf36569f4ffd04c9135ed407",
+    "src/giano/inference.py": "47b153a60ae86a2efd3c3f3e4e0ec92e13dbf8e7574ea02f3b1c092becaff12b",
+    "src/giano/local_context.py": "8e10a2b7afb7ce3c9ec1523f8362b1574e650fffea3548ecf03c626f95bb3445",
+    "src/giano/model.py": "bdfc9bdbeb8f68ce83f537ac76091e8850c18fba477a07dc067b6e94c1fb2fef",
+    "src/giano/physical.py": "f8567e400254962a30923bb75f4c673f52c788a02d811d38d267dac5bc2b032f",
+    "src/giano/prepare.py": "c30395570916dee8262e725e72a1823ac644598b9d77beba14b2314edd7da121",
+    "src/giano/pressure.py": "a1ed6c9b9bdec4735e67feafbb666b42f5f662a40d36051e80fe40f0644b7126",
+    "src/giano/station_reference.py": "cee7c953d8adafeef3939df552eb01cbd95c243b402a6f09109f4a960269b844",
+    "src/giano/train.py": "21a2bec944009fbd86d5e075491704c564e798574bc2a44aa24a00ae68e75807",
+    "src/giano/trentino.py": "34a93bed502af3cb64d7e76e255de4d00b7ad216ea721cb95fb662531fec0fe4",
+    "src/giano/windows.py": "bb84680138a3149ea9ef6d4a8003b46e5b003f4849426647d341f1d876a6f9b2",
+    "src/giano/weights/calibration.json": "8aadc1dc7fd6466acc47c1f123cd3ed00857d6bac950b796bc10c32774da8acb",
+    "src/giano/weights/ensemble.pt": "deb5070ad10fc99a3dd9bf7a83e1738ac31280eec09db01abb8b1053478a21d9",
+    "src/giano/weights/product.json": "c6ef48f806a6ca7703709f30917439537b3113c8ba997b5c2f4b9d6a982f6dcb",
+    "src/giano/weights/trentino.npz": "23ab9583d523a80e58ec71a6c8a7ade307de60611612f95d074d962b21c1179f",
+    "examples/dwd/sources.csv": "0cf3dfaa5b343a2c39140640be2e7c5a81319fa82a50e65ffb3c8ef9615b888f",
+    "examples/dwd/evaluate_holdout.py": "d4fa2895ea70e770c6cc211976ffb829576b74e4f26e70e12cb187e2eb4bb3fa",
+    "examples/dwd/evaluate.py": "aa0c669d7e59f4f0934eeaf302b085102c6487a2ecbc2909c42e2edf6e32d9f5",
+    "examples/swiss/evaluate.py": "b1c7d456c16d806374d08e4202dd7a80fb676c1e5cf7fa7c5fcd92a9965c039b",
+    "uv.lock": "2cbb3b2a236b9b34e4ef804ba24f70957d49673938bf0c14d473faeecf02b911"
+  },
+  "stations": [
+    "01975",
+    "04039",
+    "00591",
+    "03086",
+    "02429",
+    "00704",
+    "04745",
+    "01339",
+    "03379",
+    "01262",
+    "05404",
+    "02905",
+    "02290",
+    "00232",
+    "00125",
+    "02410"
+  ],
+  "grid_utc_end_exclusive": [
+    "2025-10-01",
+    "2026-11-15"
+  ],
+  "starts_utc": [
+    "2026-01-05T03",
+    "2026-04-05T09",
+    "2026-07-05T15",
+    "2026-09-30T21"
+  ],
+  "scenarios": [
+    [
+      "2026-01-05T03",
+      "other-stations",
+      1
+    ],
+    [
+      "2026-01-05T03",
+      "other-stations",
+      6
+    ],
+    [
+      "2026-01-05T03",
+      "other-stations",
+      168
+    ],
+    [
+      "2026-01-05T03",
+      "other-stations",
+      720
+    ],
+    [
+      "2026-01-05T03",
+      "other-stations",
+      2160
+    ],
+    [
+      "2026-01-05T03",
+      "no-contemporaneous-inputs",
+      6
+    ],
+    [
+      "2026-01-05T03",
+      "no-contemporaneous-inputs",
+      720
+    ],
+    [
+      "2026-04-05T09",
+      "other-stations",
+      1
+    ],
+    [
+      "2026-04-05T09",
+      "other-stations",
+      6
+    ],
+    [
+      "2026-04-05T09",
+      "other-stations",
+      168
+    ],
+    [
+      "2026-04-05T09",
+      "other-stations",
+      720
+    ],
+    [
+      "2026-04-05T09",
+      "other-stations",
+      2160
+    ],
+    [
+      "2026-04-05T09",
+      "no-contemporaneous-inputs",
+      6
+    ],
+    [
+      "2026-04-05T09",
+      "no-contemporaneous-inputs",
+      720
+    ],
+    [
+      "2026-07-05T15",
+      "other-stations",
+      1
+    ],
+    [
+      "2026-07-05T15",
+      "other-stations",
+      6
+    ],
+    [
+      "2026-07-05T15",
+      "other-stations",
+      168
+    ],
+    [
+      "2026-07-05T15",
+      "other-stations",
+      720
+    ],
+    [
+      "2026-07-05T15",
+      "other-stations",
+      2160
+    ],
+    [
+      "2026-07-05T15",
+      "no-contemporaneous-inputs",
+      6
+    ],
+    [
+      "2026-07-05T15",
+      "no-contemporaneous-inputs",
+      720
+    ],
+    [
+      "2026-09-30T21",
+      "other-stations",
+      1
+    ],
+    [
+      "2026-09-30T21",
+      "other-stations",
+      6
+    ],
+    [
+      "2026-09-30T21",
+      "other-stations",
+      168
+    ],
+    [
+      "2026-09-30T21",
+      "other-stations",
+      720
+    ],
+    [
+      "2026-09-30T21",
+      "no-contemporaneous-inputs",
+      6
+    ],
+    [
+      "2026-09-30T21",
+      "no-contemporaneous-inputs",
+      720
+    ]
+  ],
+  "release_options": {
+    "local_context": true,
+    "station_reference": true
+  },
+  "methods": [
+    "release",
+    "standard",
+    "linear",
+    "spatial"
+  ],
+  "precipitation_wet_mm": 0.1,
+  "urls": {
+    "stundenwerte_TU_01975_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_01975_akt.zip",
+    "stundenwerte_P0_01975_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_01975_akt.zip",
+    "stundenwerte_RR_01975_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_01975_akt.zip",
+    "stundenwerte_FF_01975_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_01975_akt.zip",
+    "stundenwerte_TU_04039_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_04039_akt.zip",
+    "stundenwerte_P0_04039_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_04039_akt.zip",
+    "stundenwerte_RR_04039_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_04039_akt.zip",
+    "stundenwerte_FF_04039_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_04039_akt.zip",
+    "stundenwerte_TU_00591_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_00591_akt.zip",
+    "stundenwerte_P0_00591_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_00591_akt.zip",
+    "stundenwerte_RR_00591_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_00591_akt.zip",
+    "stundenwerte_FF_00591_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_00591_akt.zip",
+    "stundenwerte_TU_03086_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_03086_akt.zip",
+    "stundenwerte_P0_03086_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_03086_akt.zip",
+    "stundenwerte_RR_03086_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_03086_akt.zip",
+    "stundenwerte_FF_03086_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_03086_akt.zip",
+    "stundenwerte_TU_02429_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_02429_akt.zip",
+    "stundenwerte_P0_02429_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_02429_akt.zip",
+    "stundenwerte_RR_02429_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_02429_akt.zip",
+    "stundenwerte_FF_02429_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_02429_akt.zip",
+    "stundenwerte_TU_00704_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_00704_akt.zip",
+    "stundenwerte_P0_00704_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_00704_akt.zip",
+    "stundenwerte_RR_00704_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_00704_akt.zip",
+    "stundenwerte_FF_00704_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_00704_akt.zip",
+    "stundenwerte_TU_04745_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_04745_akt.zip",
+    "stundenwerte_P0_04745_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_04745_akt.zip",
+    "stundenwerte_RR_04745_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_04745_akt.zip",
+    "stundenwerte_FF_04745_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_04745_akt.zip",
+    "stundenwerte_TU_01339_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_01339_akt.zip",
+    "stundenwerte_P0_01339_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_01339_akt.zip",
+    "stundenwerte_RR_01339_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_01339_akt.zip",
+    "stundenwerte_FF_01339_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_01339_akt.zip",
+    "stundenwerte_TU_03379_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_03379_akt.zip",
+    "stundenwerte_P0_03379_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_03379_akt.zip",
+    "stundenwerte_RR_03379_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_03379_akt.zip",
+    "stundenwerte_FF_03379_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_03379_akt.zip",
+    "stundenwerte_TU_01262_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_01262_akt.zip",
+    "stundenwerte_P0_01262_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_01262_akt.zip",
+    "stundenwerte_RR_01262_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_01262_akt.zip",
+    "stundenwerte_FF_01262_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_01262_akt.zip",
+    "stundenwerte_TU_05404_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_05404_akt.zip",
+    "stundenwerte_P0_05404_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_05404_akt.zip",
+    "stundenwerte_RR_05404_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_05404_akt.zip",
+    "stundenwerte_FF_05404_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_05404_akt.zip",
+    "stundenwerte_TU_02905_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_02905_akt.zip",
+    "stundenwerte_P0_02905_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_02905_akt.zip",
+    "stundenwerte_RR_02905_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_02905_akt.zip",
+    "stundenwerte_FF_02905_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_02905_akt.zip",
+    "stundenwerte_TU_02290_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_02290_akt.zip",
+    "stundenwerte_P0_02290_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_02290_akt.zip",
+    "stundenwerte_RR_02290_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_02290_akt.zip",
+    "stundenwerte_FF_02290_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_02290_akt.zip",
+    "stundenwerte_TU_00232_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_00232_akt.zip",
+    "stundenwerte_P0_00232_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_00232_akt.zip",
+    "stundenwerte_RR_00232_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_00232_akt.zip",
+    "stundenwerte_FF_00232_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_00232_akt.zip",
+    "stundenwerte_TU_00125_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_00125_akt.zip",
+    "stundenwerte_P0_00125_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_00125_akt.zip",
+    "stundenwerte_RR_00125_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_00125_akt.zip",
+    "stundenwerte_FF_00125_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_00125_akt.zip",
+    "stundenwerte_TU_02410_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/air_temperature/recent/stundenwerte_TU_02410_akt.zip",
+    "stundenwerte_P0_02410_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/pressure/recent/stundenwerte_P0_02410_akt.zip",
+    "stundenwerte_RR_02410_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/precipitation/recent/stundenwerte_RR_02410_akt.zip",
+    "stundenwerte_FF_02410_akt.zip": "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/hourly/wind/recent/stundenwerte_FF_02410_akt.zip"
+  }
+}

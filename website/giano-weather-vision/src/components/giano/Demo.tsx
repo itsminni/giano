@@ -26,7 +26,7 @@ const tooltipStyle = {
 };
 
 export function Demo() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [step, setStep] = useState(0);
   const [playing, setPlaying] = useState(true);
 
@@ -104,9 +104,15 @@ export function Demo() {
                 ticks={[5, 7.5, 10, 12.5, 15]}
                 stroke="var(--muted-foreground)"
                 fontSize={11}
-                unit="°"
+                unit=" °C"
               />
-              <Tooltip contentStyle={tooltipStyle} />
+              <Tooltip
+                contentStyle={tooltipStyle}
+                labelFormatter={(hour) => t("demo.hour", { hour })}
+                formatter={(value: number) =>
+                  `${value.toLocaleString(locale, { maximumFractionDigits: 2 })} °C`
+                }
+              />
               {step >= 1 && (
                 <Line
                   type="monotone"
@@ -137,7 +143,7 @@ export function Demo() {
                   stroke="var(--chart-2)"
                   strokeOpacity={0.55}
                   label={{
-                    value: "GAP",
+                    value: t("demo.gap"),
                     fill: "var(--chart-2)",
                     fontSize: 12,
                     position: "insideTop",

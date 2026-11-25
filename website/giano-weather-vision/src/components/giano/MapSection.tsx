@@ -96,7 +96,7 @@ export function MapSection({
         <h1 className="font-display text-4xl font-bold sm:text-5xl">
           {t("map.title")}
         </h1>
-        <p className="mt-3 text-muted-foreground">{t("copy.description")}</p>
+        <p className="mt-3 text-muted-foreground">{t("map.archiveIntro")}</p>
       </div>
       <div className="flex flex-wrap items-center gap-3">
         {filters.map((item) => (

@@ -33,6 +33,9 @@ htmlcov/
 # Ignore VS Code
 .vscode/
 
+# Local training caches, checkpoints and reports
+/runs/
+
 # Ignore generated inference, evaluation, and training outputs
 artifacts/
 logs/

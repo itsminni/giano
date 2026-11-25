@@ -12,14 +12,37 @@ export const unitLabels: Record<string, string> = {
   degrees: "°",
   deg: "°",
 };
-export const validationMetrics = Object.entries(catalog.results.variables).map(
-  ([key, value]) => ({
-    key,
-    unit: unitLabels[value.unit] ?? value.unit,
-    mae: value.metrics.mae,
-    rmse: value.metrics.mean_case_seed_rmse,
-  }),
-);
+// Hour-weighted MAE from station-context-scores.csv and its paired controls in release-comparison.csv.
+export const reconstructionResults = [
+  {
+    key: "temperature",
+    unit: "°C",
+    mae: 1.8943192,
+    bilstm: 4.69895384,
+    firstRelease: 4.67991046,
+  },
+  {
+    key: "humidity",
+    unit: "%",
+    mae: 12.57287779,
+    bilstm: 18.7261954,
+    firstRelease: 18.55045027,
+  },
+  {
+    key: "pressure",
+    unit: "hPa",
+    mae: 4.35757729,
+    bilstm: 6.0438046,
+    firstRelease: 5.98686316,
+  },
+  {
+    key: "precipitation",
+    unit: "mm",
+    mae: 0.11226068,
+    bilstm: 0.19171441,
+    firstRelease: 0.19008985,
+  },
+];
 export const validationInfo = {
   seeds: catalog.results.seeds,
   caseSeedGroups:
@@ -50,42 +73,42 @@ export const GITHUB_URL = "https://github.com/itsminni/giano";
 export const DATASET_URL =
   "https://drive.google.com/drive/folders/1DPsYf6dVRtCqxE3mDYAx4evTj0WASXK7?usp=sharing";
 
-// corrected_v2_downstream_v2/analysis/summary.json: equal-case/seed/horizon MAE.
-export const downstreamResults = [
+// Paired forecast MAE from examples/ridge/context-scores.csv, all masks and horizons.
+export const extendedRepairResults = [
   {
     variable: "temperature",
     station: "T0088",
     unit: "°C",
-    corrupted: 1.4029195697947963,
-    giano: 1.181961197135373,
+    linear: 1.345679,
+    giano: 1.163786,
   },
   {
     variable: "humidity",
     station: "T0118",
     unit: "%",
-    corrupted: 11.921975462245351,
-    giano: 9.885848108908059,
+    linear: 11.645063,
+    giano: 10.020116,
   },
   {
     variable: "pressure",
     station: "T0103",
     unit: "hPa",
-    corrupted: 2.6259259146181337,
-    giano: 1.4358508669941243,
+    linear: 1.693211,
+    giano: 1.591477,
   },
   {
     variable: "precipitation",
     station: "T0094",
     unit: "mm",
-    corrupted: 0.2915354443635459,
-    giano: 0.296385198117722,
+    linear: 0.301833,
+    giano: 0.296071,
   },
   {
     variable: "wind_direction",
     station: "T0442",
     unit: "°",
-    corrupted: 29.235476862135634,
-    giano: 28.99114457817219,
+    linear: 28.94091,
+    giano: 29.807296,
   },
 ];
 

@@ -1,1 +1,1 @@
-"""Giano meteorological time-series imputation toolkit."""
+"""Giano meteorological gap filling."""

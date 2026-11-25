@@ -11,7 +11,23 @@ for (const section of ["home", "impatto", "storia", "guida"]) {
   assert(main.includes(`id="${section}"`), `Missing section: ${section}`);
   assert(html.includes(`href="#${section}"`), `Missing link: ${section}`);
 }
-assert(main.includes("giano-impute"), "Missing usage instructions");
+assert(main.includes("giano --input"), "Missing usage instructions");
+for (const marker of [
+  "Giano-Architecture",
+  "Model-and-evidence",
+  "T0103",
+  "Downstream-Utility",
+  "--local-context",
+]) {
+  assert(
+    main.includes(marker),
+    `Missing model or results in Pages HTML: ${marker}`,
+  );
+}
+assert(
+  main.includes("giano-train") && main.includes("drive.google.com"),
+  "Missing training guide or public dataset",
+);
 assert(main.includes("Gabriele Mininni"), "Missing project credits");
 assert(/<table\b/.test(main), "Missing results table");
 assert(

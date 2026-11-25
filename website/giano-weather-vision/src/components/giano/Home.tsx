@@ -14,16 +14,18 @@ import {
   Satellite,
   Target,
 } from "lucide-react";
-import heroImg from "@/assets/hero-trentino.jpg";
 import {
   attribution,
   catalogCounts,
   validationInfo,
-  validationMetrics,
+  reconstructionResults,
+  GITHUB_URL,
 } from "./data";
 import { useI18n } from "./i18n";
 import { TrentinoMap } from "./TrentinoMap";
 import type { TabId } from "./Nav";
+
+import heroImg from "@/assets/hero-trentino.jpg";
 
 const tooltipStyle = {
   background: "var(--popover)",
@@ -78,9 +80,6 @@ export function Home({ onNavigate }: { onNavigate?: (t: TabId) => void }) {
           <p className="mt-3 font-display text-xl sm:text-2xl">
             {t("home.subtitle")}
           </p>
-          <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
-            {t("copy.description")}
-          </p>
           {onNavigate && (
             <div className="mt-8 flex flex-wrap gap-3">
               <button
@@ -101,29 +100,6 @@ export function Home({ onNavigate }: { onNavigate?: (t: TabId) => void }) {
         </div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat
-          icon={Database}
-          value={`${catalogCounts.stationsWithHistory}`}
-          label={t("home.stat1")}
-        />
-        <Stat
-          icon={Activity}
-          value={`${catalogCounts.series}`}
-          label={t("home.stat2")}
-        />
-        <Stat
-          icon={Satellite}
-          value={catalogCounts.reconstructedHours.toLocaleString(locale)}
-          label={t("home.stat3")}
-        />
-        <Stat
-          icon={Target}
-          value={`${catalogCounts.stationsWithValidation}`}
-          label={t("home.stat4")}
-        />
-      </section>
-
       <section className="grid gap-6 lg:grid-cols-5">
         <div className="glass rounded-3xl p-6 lg:col-span-3">
           <h3 className="text-lg font-semibold">{t("home.errorTitle")}</h3>
@@ -131,70 +107,112 @@ export function Home({ onNavigate }: { onNavigate?: (t: TabId) => void }) {
             {t("copy.results")}
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
-            {validationMetrics.map((m) => (
-              <div key={m.key} className="glass rounded-2xl p-4">
-                <p className="text-sm font-medium">{t(`var.${m.key}`)}</p>
-                <p className="mt-1 font-display text-2xl font-bold text-accent">
-                  {m.mae.toLocaleString(locale, { maximumFractionDigits: 2 })}{" "}
-                  {m.unit}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  MAE · RMSE{" "}
-                  {m.rmse.toLocaleString(locale, { maximumFractionDigits: 2 })}{" "}
-                  {m.unit}
+            {reconstructionResults.map(({ key, mae, unit }) => (
+              <div key={key} className="glass rounded-2xl p-4">
+                <h4 className="text-sm font-medium">{t(`var.${key}`)}</h4>
+                <p className="mt-1 font-display text-2xl font-bold text-accent tabular-nums">
+                  {mae.toLocaleString(locale, { maximumFractionDigits: 3 })}{" "}
+                  {unit}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">
-            {t("home.errorNote")}
-          </p>
+          <a
+            className="mt-3 inline-block text-sm text-accent underline"
+            href={`${GITHUB_URL}/wiki/Model-and-evidence`}
+          >
+            {t("home.resultsLink")}
+          </a>
         </div>
 
         <div className="glass rounded-3xl p-6 lg:col-span-2">
-          <h3 className="text-lg font-semibold">{t("home.coverTitle")}</h3>
-          <p className="mb-4 text-sm text-muted-foreground">
-            {t("home.coverNote")}
+          <h2 className="font-display text-2xl font-semibold">
+            {t("home.modelTitle")}
+          </h2>
+          <p className="mt-3 max-w-prose text-muted-foreground">
+            {t("home.modelInputs")}
           </p>
-          {onNavigate ? (
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart layout="vertical" data={coverage} margin={{ left: 10 }}>
-                <CartesianGrid stroke="var(--border)" horizontal={false} />
-                <XAxis
-                  type="number"
-                  stroke="var(--muted-foreground)"
-                  fontSize={11}
-                />
-                <YAxis
-                  type="category"
-                  dataKey="k"
-                  width={100}
-                  stroke="var(--muted-foreground)"
-                  fontSize={11}
-                />
-                <Tooltip
-                  contentStyle={tooltipStyle}
-                  cursor={{ fill: "var(--glass)" }}
-                />
-                <Bar
-                  dataKey="n"
-                  name={t("home.cover.series")}
-                  fill="var(--chart-1)"
-                  radius={[0, 6, 6, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <dl className="divide-y divide-foreground/10 text-sm">
-              {coverage.map(({ k, n }) => (
-                <div key={k} className="flex justify-between gap-4 py-3">
-                  <dt>{k}</dt>
-                  <dd className="font-semibold tabular-nums">{n}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
+          <p className="mt-3 max-w-prose text-muted-foreground">
+            {t("home.modelOutputs")}
+          </p>
+          <a
+            className="mt-4 inline-block text-sm text-accent underline"
+            href={`${GITHUB_URL}/wiki/Giano-Architecture`}
+          >
+            {t("home.modelLink")}
+          </a>
         </div>
+      </section>
+      <section className="space-y-4">
+        <h2 className="font-display text-2xl font-semibold">
+          {t("home.archiveTitle")}
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Stat
+            icon={Database}
+            value={`${catalogCounts.stationsWithHistory}`}
+            label={t("home.stat1")}
+          />
+          <Stat
+            icon={Activity}
+            value={`${catalogCounts.series}`}
+            label={t("home.stat2")}
+          />
+          <Stat
+            icon={Satellite}
+            value={catalogCounts.reconstructedHours.toLocaleString(locale)}
+            label={t("home.stat3")}
+          />
+          <Stat
+            icon={Target}
+            value={`${catalogCounts.stationsWithValidation}`}
+            label={t("home.stat4")}
+          />
+        </div>
+      </section>
+      <section className="glass rounded-3xl p-6">
+        <h3 className="text-lg font-semibold">{t("home.coverTitle")}</h3>
+        <p className="mb-4 text-sm text-muted-foreground">
+          {t("home.coverNote")}
+        </p>
+        {onNavigate ? (
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart layout="vertical" data={coverage} margin={{ left: 10 }}>
+              <CartesianGrid stroke="var(--border)" horizontal={false} />
+              <XAxis
+                type="number"
+                stroke="var(--muted-foreground)"
+                fontSize={11}
+              />
+              <YAxis
+                type="category"
+                dataKey="k"
+                width={100}
+                stroke="var(--muted-foreground)"
+                fontSize={11}
+              />
+              <Tooltip
+                contentStyle={tooltipStyle}
+                cursor={{ fill: "var(--glass)" }}
+              />
+              <Bar
+                dataKey="n"
+                name={t("home.cover.series")}
+                fill="var(--chart-1)"
+                radius={[0, 6, 6, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <dl className="divide-y divide-foreground/10 text-sm">
+            {coverage.map(({ k, n }) => (
+              <div key={k} className="flex justify-between gap-4 py-3">
+                <dt>{k}</dt>
+                <dd className="font-semibold tabular-nums">{n}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </section>
 
       <section className={onNavigate ? "grid gap-6 lg:grid-cols-5" : ""}>

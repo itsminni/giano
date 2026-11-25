@@ -84,7 +84,14 @@ export function Story() {
             {t("story.evolution1")}
           </p>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            {t("story.evolution2")}
+            {t("story.evolution2")} {t("story.awardFinalist")}{" "}
+            <a
+              className="underline underline-offset-4"
+              href="https://projects.hackersgen.com/progetti/2026"
+            >
+              Premio G.F. Marilli 2026
+            </a>
+            .
           </p>
         </div>
         <div className="glass rounded-[2rem] p-6 sm:p-8">

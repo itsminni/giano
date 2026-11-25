@@ -1,0 +1,7 @@
+# Keep byte-for-byte checksums portable across Git checkouts.
+src/giano/*.py text eol=lf
+src/giano/weights/*.json text eol=lf
+examples/dwd/evaluate*.py text eol=lf
+examples/dwd/sources.csv text eol=lf
+examples/swiss/evaluate.py text eol=lf
+uv.lock text eol=lf

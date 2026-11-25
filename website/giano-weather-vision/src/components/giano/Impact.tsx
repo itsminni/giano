@@ -1,18 +1,19 @@
+import { ArrowRight } from "lucide-react";
 import {
-  AlertTriangle,
-  CloudOff,
-  Droplets,
-  LineChart,
-  Snowflake,
-  TrendingUp,
-  ArrowRight,
-} from "lucide-react";
-import { catalogCounts, downstreamResults, GITHUB_URL } from "./data";
+  extendedRepairResults,
+  GITHUB_URL,
+  reconstructionResults,
+} from "./data";
 import { useI18n } from "./i18n";
 import type { TabId } from "./Nav";
 
 export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
   const { t, locale } = useI18n();
+  const format = (value: number) =>
+    value.toLocaleString(locale, {
+      maximumFractionDigits: 3,
+      minimumFractionDigits: 3,
+    });
 
   return (
     <div className="space-y-16">
@@ -23,101 +24,103 @@ export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
         <p className="mt-3 text-muted-foreground">{t("impact.intro")}</p>
       </div>
 
-      <section className="grid gap-6 lg:grid-cols-12">
-        <div className="glass rounded-[2rem] p-8 lg:col-span-7">
-          <span className="text-xs uppercase tracking-widest text-accent">
-            01
-          </span>
-          <h3 className="mt-2 font-display text-3xl font-bold">
-            {t("impact.h1")}
-          </h3>
-          <p className="mt-4 text-muted-foreground">{t("impact.p1")}</p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {[
-              { icon: TrendingUp, t: "impact.c1t", d: "impact.c1d" },
-              { icon: Droplets, t: "impact.c2t", d: "impact.c2d" },
-              { icon: Snowflake, t: "impact.c3t", d: "impact.c3d" },
-            ].map((c) => (
-              <div key={c.t} className="glass rounded-2xl p-4">
-                <c.icon className="h-5 w-5 text-accent" />
-                <p className="mt-2 font-semibold">{t(c.t)}</p>
-                <p className="text-sm text-muted-foreground">{t(c.d)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="glass-strong flex flex-col justify-between rounded-[2rem] p-8 lg:col-span-5">
-          <LineChart className="h-6 w-6 text-accent" />
-          <div className="mt-8">
-            <p className="font-display text-6xl font-bold text-gradient">
-              {catalogCounts.stationsWithHistory}
+      <section className="grid gap-6 md:grid-cols-2">
+        {(["swiss", "germany"] as const).map((study) => (
+          <article key={study} className="glass rounded-[2rem] p-6 sm:p-8">
+            <h3 className="font-display text-2xl font-bold">
+              {t(`impact.${study}Title`)}
+            </h3>
+            <p className="mt-3 max-w-prose text-muted-foreground">
+              {t(`impact.${study}Design`)}
             </p>
-            <p className="mt-2 text-muted-foreground">
-              {t("impact.statHistory", {
-                total: catalogCounts.stations,
-                series: catalogCounts.series,
-                hours: catalogCounts.reconstructedHours.toLocaleString(locale),
-              })}
+            <p className="mt-5 font-display text-3xl font-bold text-accent">
+              {t(`impact.${study}Score`)}
             </p>
-          </div>
-        </div>
+            <a
+              className="mt-4 inline-block text-sm text-accent underline"
+              href={`${GITHUB_URL}/tree/main/examples/${study === "swiss" ? "swiss" : "dwd"}`}
+            >
+              {t("impact.studyLink")}
+            </a>
+          </article>
+        ))}
       </section>
-
-      <section className="grid gap-6 lg:grid-cols-12">
-        <div className="glass-strong order-2 rounded-[2rem] p-8 lg:order-1 lg:col-span-4">
-          <AlertTriangle className="h-6 w-6 text-accent" />
-          <p className="mt-8 font-display text-6xl font-bold text-gradient">
-            {catalogCounts.examples}
-          </p>
-          <p className="mt-2 text-muted-foreground">
-            {t("impact.statExamples", {
-              n: catalogCounts.stationsWithExamples,
-            })}
-          </p>
+      <section
+        id="trentino-comparison"
+        className="glass rounded-[2rem] p-6 sm:p-8"
+      >
+        <h3 className="mt-2 font-display text-3xl font-bold">
+          {t("impact.trentinoTitle")}
+        </h3>
+        <div
+          className="mt-4 max-w-full overflow-x-auto"
+          role="region"
+          aria-label={t("impact.trentinoTitle")}
+          tabIndex={0}
+        >
+          <table className="w-full text-left text-sm">
+            <caption className="pb-4 text-left leading-relaxed text-muted-foreground">
+              {t("impact.trentinoCaption")}
+            </caption>
+            <thead className="border-b border-foreground/20 text-muted-foreground">
+              <tr>
+                <th scope="col" className="py-2 pr-3">
+                  {t("impact.trentinoVariable")}
+                </th>
+                <th scope="col" className="px-2 py-2 text-right">
+                  BiLSTM
+                  <span className="block text-xs font-normal">
+                    WebValley 2025
+                  </span>
+                </th>
+                <th scope="col" className="px-2 py-2 text-right">
+                  Giano 1.0
+                </th>
+                <th
+                  scope="col"
+                  className="py-2 pl-2 text-right text-foreground"
+                >
+                  Giano
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-foreground/10">
+              {reconstructionResults.map((row) => (
+                <tr key={row.key} className="tabular-nums">
+                  <th scope="row" className="py-3 pr-3 font-medium">
+                    {t(`var.${row.key}`)}{" "}
+                    <span className="whitespace-nowrap font-normal text-muted-foreground">
+                      ({row.unit})
+                    </span>
+                  </th>
+                  <td className="px-2 py-3 text-right">{format(row.bilstm)}</td>
+                  <td className="px-2 py-3 text-right">
+                    {format(row.firstRelease)}
+                  </td>
+                  <td className="py-3 pl-2 text-right font-semibold text-accent">
+                    {format(row.mae)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
-        <div className="glass order-1 rounded-[2rem] p-8 lg:order-2 lg:col-span-8">
-          <span className="text-xs uppercase tracking-widest text-accent">
-            02
-          </span>
-          <h3 className="mt-2 font-display text-3xl font-bold">
-            {t("impact.h2")}
-          </h3>
-          <p className="mt-4 text-muted-foreground">{t("impact.p2")}</p>
-          <ul className="mt-6 space-y-3">
-            {[1, 2, 3, 4].map((number) => (
-              <li
-                key={number}
-                className="flex gap-3 text-sm text-muted-foreground"
-              >
-                <CloudOff className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <span>
-                  <strong className="font-semibold text-foreground">
-                    {t(`impact.l${number}Lead`)}
-                  </strong>{" "}
-                  {t(`impact.l${number}`)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <a
+          className="mt-4 inline-block text-sm text-accent underline"
+          href={`${GITHUB_URL}/wiki/Model-and-evidence#comparison-with-the-first-release-on-the-same-missing-hours`}
+        >
+          {t("home.resultsLink")}
+        </a>
       </section>
       <section className="glass rounded-[2rem] p-6 sm:p-8">
-        <span className="text-xs uppercase tracking-widest text-accent">
-          03 · Downstream
-        </span>
         <h3 className="mt-2 font-display text-3xl font-bold">
           {t("impact.downstreamTitle")}
         </h3>
-        <p className="mt-4 max-w-4xl leading-relaxed text-muted-foreground">
+        <p className="mt-4 max-w-prose leading-relaxed text-muted-foreground">
           {t("impact.downstreamIntro")}
         </p>
-        <p className="mt-3 max-w-4xl leading-relaxed text-muted-foreground">
-          {t("impact.downstreamProtocol")}
-        </p>
         <div
-          className="mt-6 overflow-x-auto"
+          className="mt-6 max-w-full overflow-x-auto"
           role="region"
           aria-label={t("impact.downstreamCaption")}
           tabIndex={0}
@@ -132,61 +135,36 @@ export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
                   {t("impact.downstreamVariable")}
                 </th>
                 <th scope="col" className="px-3 py-3 text-right">
-                  {t("impact.downstreamDamaged")}
-                </th>
-                <th scope="col" className="px-3 py-3 text-right">
-                  {t("impact.downstreamRepaired")}
+                  {t("impact.linear")}
                 </th>
                 <th scope="col" className="py-3 pl-3 text-right">
-                  {t("impact.downstreamReduction")}
+                  {t("impact.stationMode")}
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-foreground/10">
-              {downstreamResults.map((row) => {
-                const reduction =
-                  (100 * (row.corrupted - row.giano)) / row.corrupted;
-                const format = (value: number) =>
-                  value.toLocaleString(locale, {
-                    maximumFractionDigits: 3,
-                    minimumFractionDigits: 3,
-                  });
-                return (
-                  <tr key={row.variable}>
-                    <th scope="row" className="py-4 pr-5 font-medium">
-                      {t(`var.${row.variable}`)}{" "}
-                      <span className="font-normal text-muted-foreground">
-                        ({row.unit})
-                      </span>
-                      <span className="block text-xs font-normal text-muted-foreground">
-                        {row.station}
-                      </span>
-                    </th>
-                    <td className="px-3 py-4 text-right tabular-nums">
-                      {format(row.corrupted)}
-                    </td>
-                    <td className="px-3 py-4 text-right tabular-nums">
-                      {format(row.giano)}
-                    </td>
-                    <td className="py-4 pl-3 text-right tabular-nums">
-                      {reduction.toLocaleString(locale, {
-                        maximumFractionDigits: 1,
-                        minimumFractionDigits: 1,
-                      })}
-                      %
-                    </td>
-                  </tr>
-                );
-              })}
+              {extendedRepairResults.map((row) => (
+                <tr key={row.variable}>
+                  <th scope="row" className="py-4 pr-5 font-medium">
+                    {t(`var.${row.variable}`)}{" "}
+                    <span className="font-normal text-muted-foreground">
+                      ({row.unit})
+                    </span>
+                    <span className="block text-xs font-normal text-muted-foreground">
+                      {row.station}
+                    </span>
+                  </th>
+                  <td className="px-3 py-4 text-right tabular-nums">
+                    {format(row.linear)}
+                  </td>
+                  <td className="py-4 pl-3 text-right tabular-nums">
+                    {format(row.giano)}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">
-          {t("impact.downstreamBaseline")}
-        </p>
-        <p className="mt-5 max-w-4xl leading-relaxed text-muted-foreground">
-          {t("impact.downstreamConclusion")}
-        </p>
         <a
           className="mt-4 inline-block text-sm text-accent underline"
           href={`${GITHUB_URL}/wiki/Downstream-Utility`}
@@ -196,9 +174,6 @@ export function Impact({ onNavigate }: { onNavigate?: (tab: TabId) => void }) {
       </section>
 
       <section className="glass-strong rounded-[2rem] p-6 sm:p-8">
-        <span className="text-xs uppercase tracking-widest text-accent">
-          04
-        </span>
         <h3 className="mt-2 font-display text-3xl font-bold">
           {t("impact.useTitle")}
         </h3>

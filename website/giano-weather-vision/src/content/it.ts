@@ -22,10 +22,8 @@ export default {
   "nav.demo": "Demo",
   "nav.menu": "Apri menu",
   "nav.lang": "Lingua",
-  "copy.description":
-    "Giano ricostruisce i dati meteo mancanti a partire dalle misure vicine, nel tempo e nello spazio. Qui puoi esplorare 497 serie di 171 stazioni Meteotrentino elaborate dal modello.",
   "copy.results":
-    "Per valutare Giano abbiamo nascosto alcune misure e confrontato le ricostruzioni con i valori originali. I risultati sono la media di 13 prove, ripetute con cinque seed casuali sul periodo di validazione.",
+    "Errore medio assoluto per ora misurata in 480 interruzioni simulate nel 2020. I buchi duravano 1 o 6 ore, oppure 7, 30 o 90 giorni. Giano usa il contesto locale e il riferimento di stazione.",
   "copy.example":
     "Ogni esempio contiene 72 osservazioni orarie, con una parte nascosta per la prova. Il grafico permette di vedere insieme i dati di partenza, i valori nascosti e la ricostruzione.",
   "copy.noValidation":
@@ -37,7 +35,32 @@ export default {
   "var.wind_speed": "Velocità vento",
   "var.wind_direction": "Direzione vento",
   "home.badge": "WebValley 2025 · Meteotrentino",
-  "home.subtitle": "Ricostruzione delle osservazioni meteorologiche",
+  "map.archiveIntro":
+    "Esplora le osservazioni Meteotrentino e le ricostruzioni della prima versione di Giano, stazione per stazione.",
+  "home.modelTitle": "Come si ricostruisce una misura",
+  "home.modelInputs":
+    "Giano cerca un riferimento nelle stazioni vicine, nei campi meteo esterni o nello storico locale. Due reti leggono insieme sei variabili e stimano una correzione per temperatura, umidità, pressione e pioggia.",
+  "home.modelOutputs":
+    "Per i buchi di almeno una settimana, Giano può imparare come la temperatura e il vento locali variano insieme a quelli delle stazioni vicine. Conserva le misure originali e registra il metodo usato per ogni stima. Se manca un riferimento valido, il vuoto resta visibile.",
+  "home.modelLink": "Architettura del modello",
+  "home.archiveTitle": "Archivio Meteotrentino della prima versione",
+  "home.resultsLink": "Risultati per durata e variabile",
+  "impact.swissTitle": "Otto stazioni in Svizzera",
+  "impact.swissDesign":
+    "Errore medio assoluto sulla temperatura durante interruzioni di 30 giorni con stazioni vicine attive, nel 2023–2024.",
+  "impact.swissScore": "1,01 °C",
+  "impact.germanyTitle": "Sedici stazioni in Germania",
+  "impact.germanyDesign":
+    "Errore medio di temperatura con contesto locale, su vuoti di 30 giorni con i vicini attivi ad Amburgo e Monaco.",
+  "impact.germanyScore": "0,79 °C",
+  "impact.studyLink": "Dati e protocollo",
+  "impact.linear": "Interpolazione",
+  "impact.stationMode": "Giano",
+  "impact.trentinoTitle": "Confronto tra modelli in Trentino",
+  "impact.trentinoCaption":
+    "Errore medio assoluto sulle stesse ore nascoste in Trentino nel 2020. La BiLSTM è la versione del prototipo di WebValley 2025 riaddestrata per il confronto.",
+  "impact.trentinoVariable": "Variabile",
+  "home.subtitle": "Ricostruzione delle misure meteo mancanti",
   "home.ctaMap": "Esplora le {n} stazioni",
   "home.ctaDemo": "Guarda la demo",
   "home.heroAlt":
@@ -46,9 +69,7 @@ export default {
   "home.stat2": "Serie stazione–variabile elaborate",
   "home.stat3": "Valori orari mancanti ricostruiti",
   "home.stat4": "Stazioni valutate con dati nascosti",
-  "home.errorTitle": "Quanto si avvicina ai valori reali?",
-  "home.errorNote":
-    "MAE: errore assoluto medio. RMSE: media degli RMSE delle singole prove. Ogni variabile mantiene la propria unità di misura.",
+  "home.errorTitle": "Ricostruzione in Trentino",
   "home.coverTitle": "Copertura della rete",
   "home.coverNote":
     "Quante stazioni hanno dati, esempi e risultati di valutazione. Una stazione può comparire in più gruppi.",
@@ -114,34 +135,7 @@ export default {
   "map.legend.boundary": "Confine: © OpenStreetMap contributors",
   "impact.title": "Impatto",
   "impact.intro":
-    "Quando una stazione smette di registrare, nello storico rimane un vuoto. Giano usa i dati disponibili per ricostruirlo.",
-  "impact.h1": "Perché serve Giano",
-  "impact.p1":
-    "Guasti e manutenzioni possono interrompere le misure. Giano ricostruisce i valori mancanti usando le osservazioni delle stazioni e, dove disponibili, le rianalisi ERA5, senza modificare i dati già presenti.",
-  "impact.c1t": "Trend climatici",
-  "impact.c1d": "Analizzare serie meteorologiche di lungo periodo",
-  "impact.c2t": "Risorse idriche",
-  "impact.c2d": "Supportare analisi di precipitazioni e ciclo idrologico",
-  "impact.c3t": "Monitoraggio alpino",
-  "impact.c3d": "Ricostruire osservazioni mancanti nelle stazioni in quota",
-  "impact.statHistory":
-    "stazioni elaborate su {total} del catalogo Meteotrentino, per un totale di {series} serie stazione–variabile e {hours} valori orari mancanti ricostruiti.",
-  "impact.statExamples":
-    "esempi su {n} stazioni: finestre di 72 ore con dati nascosti per confrontare ricostruzione e misure reali.",
-  "impact.h2": "Perché contano i dati mancanti",
-  "impact.p2":
-    "Non tutte le lacune hanno lo stesso peso. Perdere un'ora in una giornata stabile è diverso dal perdere il picco di un temporale o diverse ore consecutive di temperatura e umidità.",
-  "impact.l1Lead": "Medie e confronti possono cambiare",
-  "impact.l1": "se i dati mancanti si concentrano in un periodo specifico.",
-  "impact.l2Lead": "Un evento può essere descritto solo in parte",
-  "impact.l2":
-    "se la stazione smette di registrare nel momento più significativo.",
-  "impact.l3Lead": "Le analisi successive possono risentirne",
-  "impact.l3":
-    "quando lavorano su una serie incompleta, ad esempio in agricoltura, nella gestione delle risorse idriche o nei modelli di previsione.",
-  "impact.l4Lead": "Misure e stime restano distinte:",
-  "impact.l4":
-    "nei grafici mostriamo sempre dati osservati, ricostruzioni e lacune ancora aperte.",
+    "Un’interruzione può nascondere il picco di un temporale o alterare una media mensile. Per misurare quanto recupera Giano, abbiamo nascosto osservazioni note e confrontato le stime sulle stesse ore.",
   "story.title": "Come è nato Giano",
   "story.intro":
     "Giano è nato a WebValley 2025, la scuola estiva di ricerca della Fondazione Bruno Kessler. Siamo partiti da una domanda di Meteotrentino: come recuperare le osservazioni che mancano negli archivi delle stazioni?",
@@ -172,16 +166,20 @@ export default {
   "demo.pause": "Pausa",
   "demo.play": "Riproduci",
   "demo.restart": "Riavvia",
-  "demo.step": "Step {i}/{n} · {label}",
+  "demo.step": "Fase {i}/{n} · {label}",
   "demo.observed": "Osservato",
   "demo.reconstructed": "Ricostruito da Giano",
   "demo.openTitle": "Il codice è open source",
   "demo.openText":
     "Notebook, pipeline di training e valutazione del modello Giano.",
   "demo.repo": "Vedi il repository",
+  "demo.era5": "ERA5-Land · segnale di supporto",
+  "demo.alignedHour": "Stessa ora",
+  "demo.alignmentNote":
+    "La curva tratteggiata mostra il segnale ERA5-Land allineato alle ore della stazione. Offre un contesto anche dove mancano le misure locali, ma la sua griglia non coglie tutti i dettagli del rilievo e del microclima: non sostituisce le osservazioni della stazione.",
   "footer.text":
     "Un progetto nato a FBK WebValley 2025, a partire dai dati delle stazioni Meteotrentino.",
-  "footer.badge": "Progetto per il Premio GF Marilli 2026",
+  "footer.badge": "Finalista · Premio G.F. Marilli 2026",
   "footer.copy":
     "© {year} Team Giano · Dati: Provincia autonoma di Trento — Meteotrentino",
   "nav.guida": "Usare Giano",
@@ -227,32 +225,37 @@ export default {
   "history.fullRange": "Archivio: {start} — {end}",
   "map.resultNote":
     "Errori sulle osservazioni nascoste nelle prove di validazione: {groups} combinazioni valutate su {expected}.",
-  "guide.title": "Usare Giano",
+  "guide.title": "Come usare Giano",
   "guide.intro":
-    "Per ricostruire i tuoi dati, scarica Giano ed eseguilo in Python. Ecco come iniziare.",
-  "guide.installTitle": "1. Preparare l'ambiente",
+    "Prepara i dati e ricostruisci le misure mancanti con i pesi inclusi.",
+  "guide.installTitle": "1. Prepara l’ambiente",
   "guide.installText":
-    "Installare Git e uv, poi scaricare il repository e creare l'ambiente Python 3.11. I comandi qui sotto vanno eseguiti dal terminale.",
-  "guide.weightsTitle": "2. Aggiungere dati e pesi",
+    "Clona il repository, installa le dipendenze con uv e avvia i test.",
+  "guide.weightsTitle": "2. Prepara i dati",
   "guide.weightsText":
-    "Scaricare il dataset da Google Drive e conservarne la struttura nella cartella data/. I pesi addestrati si aggiungono separatamente in checkpoints/; la wiki indica i percorsi e il pacchetto di riproduzione.",
-  "guide.runTitle": "3. Ricostruire una variabile",
+    "I pesi e il piccolo esempio svizzero sono inclusi. Per addestrare e valutare Giano in Trentino, scarica i dati da Drive e metti 1-raw e 2-processed-v2 in data/.",
+  "guide.runTitle": "3. Ricostruisci una variabile",
   "guide.runText":
-    "Il comando usa il modello della temperatura già addestrato e salva la ricostruzione in nuovi file NetCDF. Mantiene le osservazioni originali e lascia vuoti i gap senza contesto sufficiente.",
+    "L’esempio ricostruisce la temperatura di marzo 2024. Il NetCDF di output conserva le osservazioni e indica quali valori sono stimati o perché restano mancanti.",
   "guide.commandNote":
-    "Usare giano-impute per l'inferenza. Il comando giano, da solo, avvia invece la pipeline di preparazione e training.",
-  "guide.datasetTitle": "Dati di un'altra rete",
+    "Aggiungi --contemporary-only per richiedere un riferimento fisico contemporaneo.",
+  "guide.stationOptions":
+    "I risultati del Trentino usano --local-context per le osservazioni locali e --station-reference per pressione e direzione del vento. Puoi attivare entrambe le opzioni nel comando.",
+  "guide.datasetTitle": "4. Usa i dati di un’altra rete",
   "guide.datasetText":
-    "Servono osservazioni, coordinate delle stazioni e una configurazione YAML che descriva colonne, unità, fuso orario e codici di qualità. L'importatore prepara il formato comune; i risultati del modello vanno poi valutati sui nuovi dati.",
+    "Il CSV delle osservazioni contiene station_id, timestamp e le variabili misurate. Il catalogo contiene station_id, latitude e longitude.",
   "guide.exampleText":
-    "La cartella examples/datasets mostra come organizzare i file.",
-  "guide.contextTitle": "Che cosa significano le 72 ore?",
-  "guide.contextText":
-    "Giano legge 72 ore alla volta, facendo scorrere la finestra lungo lo storico. Una parte delle misure deve essere disponibile per ricostruire quelle mancanti. I notebook mostrano il procedimento su esempi reali.",
-  "guide.wiki": "Guida completa nella wiki",
-  "guide.release": "Dati, pesi e riproduzione",
+    "La wiki specifica unità e convenzioni per i valori mancanti.",
+  "guide.trainTitle": "5. Addestra e valuta Giano",
+  "guide.trainText":
+    "Prepara le finestre del Trentino, addestra entrambi i membri dell’ensemble e valuta i pesi sulle interruzioni storiche. L’addestramento usa CUDA su GPU NVIDIA compatibili, Metal sui Mac supportati o la CPU.",
+  "guide.trainLink": "Guida all’addestramento e alla riproduzione",
+  "guide.release": "Formati e unità",
   "guide.dataset": "Guida ai dataset esterni",
-  "guide.notebooks": "Apri i notebook",
+  "guide.wiki": "Guida completa nella wiki",
+  "guide.downloadData": "Scarica i dati Meteotrentino da Google Drive",
+  "demo.gap": "Dati mancanti",
+  "demo.hour": "Ora {hour}",
   "guide.copy": "Copia comando",
   "guide.copied": "Copiato",
   "guide.copyFailed": "Seleziona e copia il comando qui sotto.",
@@ -265,12 +268,13 @@ export default {
   "story.evolution1":
     "Abbiamo continuato a lavorare al progetto anche dopo WebValley. Il passaggio a ImputeFormer ci ha permesso di studiare insieme il contesto temporale e le relazioni tra stazioni. Alle due variabili iniziali si sono aggiunte precipitazione, umidità, pressione e direzione del vento.",
   "story.evolution2":
-    "Il modello attuale parte dall'interpolazione e impara una correzione per le lacune più lunghe. Intorno al modello abbiamo costruito la preparazione dei dati, il training e i confronti con metodi più semplici. Le verifiche hanno portato anche a correggere il filtraggio dei dati e la funzione di training, prima di ripetere gli esperimenti.",
+    "La prima release correggeva l’interpolazione con una rete per variabile. La nuova implementazione combina riferimenti fisici e attenzione temporale, spaziale e tra variabili.",
+  "story.awardFinalist": "Giano è arrivato in finale al",
   "story.releaseTitle": "Dagli esperimenti a un progetto utilizzabile",
   "story.release1":
-    "Oggi il confronto comprende sei variabili, cinque seed e 13 tipi di lacune. Abbiamo aggiunto una prova sulle previsioni successive, l'importazione di altri dataset e un primo test su stazioni svizzere. I notebook e la wiki permettono di seguire il percorso, dai dati ai risultati.",
+    "La prima release presentava confronti su sei variabili, cinque seed e tredici scenari di lacune. Il sito conserva quelle ricostruzioni storiche delle stazioni.",
   "story.release2":
-    "Questo sito è un altro modo di esplorare il lavoro. Esso infatti permette di scegliere una stazione, osservare una ricostruzione e scorrere la sua storia. Il codice può essere eseguito anche in autonomia, senza passare dal sito.",
+    "Abbiamo poi verificato se i pesi addestrati in Trentino funzionassero su altre reti. Le prove in Svizzera e Germania ci hanno permesso di misurare quando aiutano le stazioni vicine e quando basta interpolare tra due letture dello stesso sensore.",
   "story.sources": "Fonti e approfondimenti",
   "story.sourceSchool": "La challenge di WebValley 2025",
   "story.sourceMagazine": "Il racconto di FBK Magazine",
@@ -282,32 +286,18 @@ export default {
     "A Meteotrentino per i dati delle stazioni e per averci proposto un problema concreto su cui lavorare.",
   "story.thanksSchool":
     "Alla Fondazione Bruno Kessler per l'esperienza di WebValley, e ai ricercatori e tutor che ci hanno accompagnato. Il progetto è partito anche dal tempo e dalle conoscenze che hanno condiviso con noi.",
-  "impact.downstreamTitle": "Ricostruire meglio aiuta anche a prevedere?",
+  "impact.downstreamTitle": "Prevedere dopo una ricostruzione",
   "impact.downstreamIntro":
-    "Lo abbiamo verificato con un esperimento downstream, cioè su un utilizzo successivo dei dati. Abbiamo preso lo stesso piccolo modello di previsione, addestrato su storici completi, e gli abbiamo dato prima una serie con lacune e poi la stessa serie ricostruita da Giano. Il modello previsivo resta identico, cambia solo lo storico che riceve.",
-  "impact.downstreamProtocol":
-    "Le previsioni riguardano 1, 6, 12 e 24 ore successive. Giano vede soltanto il passato disponibile al momento della previsione, senza conoscere i valori futuri.",
+    "Ridge prevede a 1, 6, 12 e 24 ore da una serie ricostruita di 72 ore. Per ricostruirla, entrambi i metodi possono usare anche i sette giorni precedenti.",
   "impact.downstreamCaption":
-    "Errore delle previsioni (MAE) · media di cinque seed, quattro tipi di lacune e quattro orizzonti",
+    "Errore medio assoluto su 16.000 previsioni per stazione e variabile (più basso è meglio)",
   "impact.downstreamVariable": "Variabile e stazione",
-  "impact.downstreamDamaged": "Storico con lacune",
-  "impact.downstreamRepaired": "Storico ricostruito",
-  "impact.downstreamReduction": "Riduzione dell'errore",
-  "impact.downstreamBaseline":
-    "Nello storico con lacune, i valori mancanti sono sostituiti con un valore neutro: la mediana.",
-  "impact.downstreamConclusion":
-    "Temperatura, umidità e pressione migliorano in questa prova. La precipitazione peggiora leggermente e la direzione del vento cambia poco. Sono risultati su una stazione per variabile.",
   "impact.downstreamLink": "Metodo e risultati completi",
   "impact.useTitle": "Giano anche sui tuoi dati",
   "impact.useText":
-    "Il progetto non si ferma alle stazioni della mappa. Puoi eseguire Giano sul tuo computer, usare i pesi già addestrati oppure allenare nuovi modelli. Per importare un'altra rete bastano osservazioni in CSV, coordinate delle stazioni e un file che descriva il formato.",
+    "Puoi eseguire Giano sul tuo computer con i pesi inclusi. Una nuova rete richiede osservazioni orarie e coordinate delle stazioni.",
   "impact.useDetail":
     "La guida accompagna dall'installazione alla prima ricostruzione.",
   "impact.useGuide": "Come usare Giano",
   "impact.useCode": "Apri il codice",
-  "demo.era5": "ERA5-Land · segnale di supporto",
-  "demo.alignedHour": "Stessa ora",
-  "demo.alignmentNote":
-    "La curva tratteggiata mostra il segnale ERA5-Land allineato alle ore della stazione. Offre un contesto anche dove mancano le misure locali, ma la sua griglia non coglie tutti i dettagli del rilievo e del microclima: non sostituisce le osservazioni della stazione.",
-  "guide.downloadData": "Dataset su Google Drive",
 };
