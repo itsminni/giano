@@ -86,8 +86,20 @@ A later test used the frozen release on 432 simulated outages at 16 German stati
 
 In the Ridge forecast study, when both filling methods could use one extra week of history, Giano gave lower forecast error for temperature, humidity, pressure and rain. Interpolation gave lower error for wind direction. [Forecast study and paired results](https://github.com/itsminni/giano/wiki/Downstream-Utility)
 
-## Project history and credits
+## Project history
 
 Giano 1.0 used separate models for each variable. Its station reconstructions appear in the website explorer and its forecast study used those reconstructions as inputs. Release 2.0 introduced the multivariate ensemble evaluated in Trentino, Switzerland and Germany. [Station explorer](https://itsminni.github.io/giano/?tab=mappa) · [Original implementation](https://github.com/itsminni/giano/tree/dfc63ccbb47b4eb6a0845c1ece91180b0b32beac)
 
-Anita Cappello, Gabriele Mininni, Martina Pellegrini, Daniele Corn and Michele Pio Lomartire developed Giano with Rishabh Wanjari as their main tutor. The original work drew on ImputeFormer, Meteotrentino station observations and ERA5 reanalysis. [WebValley 2025](https://webvalley.fbk.eu/challenge/) · [ImputeFormer](https://doi.org/10.1145/3637528.3671751) · [Meteotrentino](https://www.meteotrentino.it/) · [ERA5](https://doi.org/10.1002/qj.3803) · [Premio G.F. Marilli 2026](https://projects.hackersgen.com/progetti/2026)
+### Team & Credits
+
+Giano was originally developed by Anita Cappello, Gabriele Mininni, Martina Pellegrini, Daniele Corn and Michele Pio Lomartire, with Rishabh Wanjari as their main tutor, during WebValley 2025.
+
+The original work drew on ImputeFormer, Meteotrentino station observations and ERA5 reanalysis.
+
+### References & Resources
+
+- [WebValley 2025](https://webvalley.fbk.eu/challenge/)
+- [Premio G.F. Marilli 2026](https://projects.hackersgen.com/progetti/2026)
+- [Meteotrentino — Weather Station Data](https://www.meteotrentino.it/)
+- [ImputeFormer — Research Paper](https://doi.org/10.1145/3637528.3671751)
+- [ERA5 — Atmospheric Reanalysis](https://doi.org/10.1002/qj.3803)
