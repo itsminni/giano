@@ -1,0 +1,19 @@
+{
+  "source_models": [
+    {
+      "seed": 42,
+      "epoch": 32,
+      "source_sha256": "505551524efd29084b022cdd87001ce44c5ab8e15bddf73fadbf1cb7d5856f5c"
+    },
+    {
+      "seed": 43,
+      "epoch": 20,
+      "source_sha256": "f389c15f5e24de3db5838ddc515c8bba2a7ecf62e647b405a05c91d70c15f4aa"
+    }
+  ],
+  "sha256": {
+    "ensemble.pt": "deb5070ad10fc99a3dd9bf7a83e1738ac31280eec09db01abb8b1053478a21d9",
+    "calibration.json": "8aadc1dc7fd6466acc47c1f123cd3ed00857d6bac950b796bc10c32774da8acb",
+    "trentino.npz": "23ab9583d523a80e58ec71a6c8a7ade307de60611612f95d074d962b21c1179f"
+  }
+}

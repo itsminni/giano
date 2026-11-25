@@ -1,0 +1,51 @@
+{
+  "dataset": "noaa-isd-lite-2024",
+  "sources": [
+    {
+      "file": "isd-history.csv",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv",
+      "sha256": "1994747ab4af1b97e63adb434b4d0d022f2daee76f0c144ea9ab46be2d906604"
+    },
+    {
+      "file": "067600-99999-2024.gz",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-lite/2024/067600-99999-2024.gz",
+      "sha256": "b6eb3a30f9fd87cc1f092da94e3c18ba0333eb37f9c3fdcea8947ac4ab933a26"
+    },
+    {
+      "file": "067620-99999-2024.gz",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-lite/2024/067620-99999-2024.gz",
+      "sha256": "0958abd7b07000f5faa631b55d94423885e75785909101cf9cd10863225b97db"
+    },
+    {
+      "file": "067700-99999-2024.gz",
+      "url": "https://www.ncei.noaa.gov/pub/data/noaa/isd-lite/2024/067700-99999-2024.gz",
+      "sha256": "14500747ca178070e802bd3b5c42d473e0bda714d516ef8523cae75045bc1875"
+    }
+  ],
+  "stations": [
+    {
+      "station_id": "067600-99999",
+      "latitude": 46.167,
+      "longitude": 8.783,
+      "name": "LOCARNO-MONTI"
+    },
+    {
+      "station_id": "067620-99999",
+      "latitude": 46.167,
+      "longitude": 8.933,
+      "name": "MAGADINO-CADENAZZO"
+    },
+    {
+      "station_id": "067700-99999",
+      "latitude": 46.004,
+      "longitude": 8.911,
+      "name": "LUGANO"
+    }
+  ],
+  "format_documentation": "https://www.ncei.noaa.gov/pub/data/noaa/isd-lite/isd-lite-format.txt",
+  "limits": "ISD-Lite nominal hourly observations, not exact hourly means; source quality flags are not distributed. Missing -9999 masked before scaling. Calm-wind directions masked. No humidity derived, no sea-level pressure substituted for station pressure, no trace rain rounded to zero.",
+  "outputs": {
+    "observations.csv": "dcef6a4bebfa58611f2a79f59410397d76dfbc7c354d989c0e3b8bc0a1073028",
+    "stations.csv": "a728cf9c18faa41b8e2c729fcc7e472753a856578fcb0dad9191bc131399a513"
+  }
+}
