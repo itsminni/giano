@@ -90,13 +90,13 @@ In the Ridge forecast study, when both filling methods could use one extra week 
 
 Giano 1.0 used separate models for each variable. Its station reconstructions appear in the website explorer and its forecast study used those reconstructions as inputs. Release 2.0 introduced the multivariate ensemble evaluated in Trentino, Switzerland and Germany. [Station explorer](https://itsminni.github.io/giano/?tab=mappa) · [Original implementation](https://github.com/itsminni/giano/tree/dfc63ccbb47b4eb6a0845c1ece91180b0b32beac)
 
-### Team & Credits
+## Team & Credits
 
 Giano was originally developed by Anita Cappello, Gabriele Mininni, Martina Pellegrini, Daniele Corn and Michele Pio Lomartire, with Rishabh Wanjari as their main tutor, during WebValley 2025.
 
 The original work drew on ImputeFormer, Meteotrentino station observations and ERA5 reanalysis.
 
-### References & Resources
+## References & Resources
 
 - [WebValley 2025](https://webvalley.fbk.eu/challenge/)
 - [Premio G.F. Marilli 2026](https://projects.hackersgen.com/progetti/2026)
